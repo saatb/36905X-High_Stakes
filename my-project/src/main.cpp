@@ -134,11 +134,17 @@ void autonomous() {}
 void opcontrol() {
 
 	while (true) {
+
 		int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 		int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 		
+		if (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
 		chassis.tank(leftY, rightY);
-
-		pros::delay(25);
 		}
+		else {
+		chassis.arcade(leftY, rightY);
+		}
+		pros::delay(25);
+	}
 }
