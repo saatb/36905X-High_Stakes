@@ -2,7 +2,11 @@
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"
+#include "liblvgl/llemu.hpp"
+#include "pros/device.h"
+#include "pros/llemu.hpp"
 #include "pros/misc.h"
+#include <cstdio>
 
 // controller declaration
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -74,12 +78,17 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	chassis.calibrate();
+	if (pros::c::get_plugged_type(7) == pros::c::E_DEVICE_IMU) {
+      chassis.calibrate();
+   }
+	chassis.setPose(0,0,0);
+	leftMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    rightMotors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	pros::Task screen_task([&](){
 		while (true){
-			pros::lcd::print(0, "X: f%", chassis.getPose().x);
-			pros::lcd::print(1, "Y: f%", chassis.getPose().y);
-			pros::lcd::print(2, "Theta: f%", chassis.getPose().theta);
+			pros::lcd::print(0, "X: %f", chassis.getPose().x);
+			pros::lcd::print(1, "Y: %f", chassis.getPose().y);
+			pros::lcd::print(2, "Theta: %f", chassis.getPose().theta);
 			pros::delay(20);
 		}
 	});
@@ -139,11 +148,13 @@ void opcontrol() {
 		int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 		
-		if (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+		if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+			pros::lcd::set_text(4, "tank");
 		chassis.tank(leftY, rightY);
 		}
 		else {
-		chassis.arcade(leftY, rightY);
+			pros::lcd::set_text(4, "arcade");
+		chassis.curvature(leftY, rightX);
 		}
 		pros::delay(25);
 	}
