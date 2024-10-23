@@ -6,10 +6,6 @@ namespace Robot {
         public:
         void run();
 
-        void score();
-
         Intake ();
-
-        void toggle();
     };
 }
