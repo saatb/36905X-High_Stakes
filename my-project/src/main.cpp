@@ -127,7 +127,6 @@ void opcontrol() {
 		subsystem.drivetrain.run();
 		subsystem.intake.run();
 		subsystem.clamp.run();
+		pros::delay(20);
 	}
-
-	pros::delay(20);
 }
