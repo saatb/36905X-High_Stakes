@@ -7,7 +7,7 @@ using namespace Robot;
 
 Autonomous::routine autonSelectorScreen::lastAuton;
 
-
+/*
 void autonSelectorScreen::autonUiUpdate(lv_event_t *e){
     lv_obj_t *tab1			 = lv_event_get_current_target(e);
 	lv_obj_t *event_obj		 = lv_event_get_target(e);
@@ -107,4 +107,4 @@ void autonSelectorScreen::selector(){
 	lv_obj_set_style_border_color(auton_dd, lv_color_hex(0xd22730), 0);
 	lv_obj_set_style_border_color(auton_dd, lv_color_hex(0x7a7a7a), LV_STATE_DISABLED);
 	lv_obj_align(auton_dd, LV_ALIGN_TOP_RIGHT, 0, 0);
-}
+} */

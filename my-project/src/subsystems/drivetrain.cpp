@@ -5,7 +5,14 @@
 using namespace Robot;
 using namespace Robot::Global;
 
-void Drivetrain::tankDrive(){
+Drivetrain::DRIVE_MODE Drivetrain::driveMode = TANK_DRIVE;
+
+Drivetrain::Drivetrain()
+{
+	Drivetrain::driveMode = TANK_DRIVE;
+}
+
+void Drivetrain::run(){
     int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 	int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 

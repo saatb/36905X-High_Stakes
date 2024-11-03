@@ -26,10 +26,10 @@ namespace Global {
     extern lemlib::OdomSensors sensors;
 
     // moving PID
-    extern lemlib::ControllerSettings lateral_controller;
+    extern lemlib::ControllerSettings lateralController;
 
     // turning PID
-    extern lemlib::ControllerSettings angular_controller;
+    extern lemlib::ControllerSettings angularController;
 
     extern lemlib::Chassis chassis;
 

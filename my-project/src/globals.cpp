@@ -11,21 +11,21 @@ namespace Global{
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     //intake and conveyor motors
-    pros::Motor intakeMotor(12, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
-    pros::Motor conveyorMotor(13, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
+    pros::Motor intakeMotor(-5, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
+    pros::Motor conveyorMotor(20, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
 
     //pneumatic (singular for now)
-    pros::adi::Pneumatics clampControl('C', false);
+    pros::adi::Pneumatics clampControl('A', false);
 
     //imu
-    pros::Imu imu(7);
+    pros::Imu imu(10);
 
     //drive motor groups
-    pros::MotorGroup rightMotors({1,2,3}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
-    pros::MotorGroup leftMotors({-4,-5,-6}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
+    pros::MotorGroup driveRight({1,2,3}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
+    pros::MotorGroup driveLeft({-4,-6,-7}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
 
     //make drivetrain
-    lemlib::Drivetrain drivetrain(&leftMotors, &rightMotors, 
+    lemlib::Drivetrain drivetrain(&driveLeft, &driveRight, 
 	12, lemlib::Omniwheel::NEW_325, 450, 2);
 
     //odom (only IMU!)
@@ -57,6 +57,6 @@ namespace Global{
                                                 0 // maximum acceleration (slew)
     );
 
-    lemlib::Chassis chassis(drivetrain, lateral_controller, angular_controller, sensors);
+    lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);
 }
 }

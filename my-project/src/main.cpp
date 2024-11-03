@@ -32,9 +32,9 @@ struct RobotSubsystems {
    Robot::Clamp clamp;
 } subsystem;
 
-struct RobotScreen{
+/*struct RobotScreen{
 	Robot::autonSelectorScreen selector;
-} screen;
+} screen;*/
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -44,15 +44,15 @@ struct RobotScreen{
  */
 void initialize() {
 	pros::lcd::initialize();
-	if (pros::c::get_plugged_type(7) == pros::c::E_DEVICE_IMU) {
+	if (pros::c::get_plugged_type(10) == pros::c::E_DEVICE_IMU) {
       chassis.calibrate();
    }
 
 	chassis.setPose(0,0,0);
-	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-	screen.selector.selector();
+	//screen.selector.selector();
 	/*pros::Task screen_task([&](){
 		while (true){
 			pros::lcd::print(0, "X: %f", chassis.getPose().x);
@@ -93,7 +93,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp);
+	//subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp);
 }
 
 /**
