@@ -17,6 +17,17 @@ namespace Robot {
             void autonMove(Intake &intake, Clamp &clamp);
 
             static void autonSwitcher(int routine);
+
+        private:
+            void auton1(Intake &intake, Clamp &clamp);
+
+            void auton2(Intake &intake, Clamp &clamp);
+            
+            void auton3(Intake &intake, Clamp &clamp);
+            
+            void auton4(Intake &intake, Clamp &clamp);
+            
+            void auton5(Intake &intake, Clamp &clamp);
     };
 
 }

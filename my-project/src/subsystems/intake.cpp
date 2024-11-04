@@ -2,11 +2,12 @@
 #include "robot/intake.h"
 #include <cassert>
 #include "globals.h"
+#include "pros/motors.h"
+#include "pros/rtos.hpp"
 
 using namespace Robot;
 using namespace Robot::Global;
 Intake::Intake() {
-   controller.print(0, 0, "Intake initialized");
 }
 
 void Intake::run() {
@@ -22,4 +23,14 @@ void Intake::run() {
         intakeMotor.brake();
         conveyorMotor.brake();
     }
+}
+
+void Intake::autoRun(int direction, int speed){
+    intakeMotor.move_velocity((direction * speed));
+    conveyorMotor.move_velocity((direction * speed));
+}
+
+void Intake::stop(){
+    intakeMotor.move_velocity((0));
+    conveyorMotor.move_velocity((0));
 }

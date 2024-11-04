@@ -7,7 +7,11 @@ using namespace Robot;
 
 Autonomous::routine autonSelectorScreen::lastAuton;
 
-/*
+autonSelectorScreen::autonSelectorScreen(){
+// hi!
+};
+
+//update ui
 void autonSelectorScreen::autonUiUpdate(lv_event_t *e){
     lv_obj_t *tab1			 = lv_event_get_current_target(e);
 	lv_obj_t *event_obj		 = lv_event_get_target(e);
@@ -54,6 +58,7 @@ void autonSelectorScreen::autonUiUpdate(lv_event_t *e){
 	lv_label_set_text_fmt(autonLabel, "Current Auton: %s", Autonomous::autonName.c_str());
 }
 
+//actually select auton
 void autonSelectorScreen::selector(){
 	//Create a Tab view object
 	lv_obj_t *tabview;
@@ -107,4 +112,4 @@ void autonSelectorScreen::selector(){
 	lv_obj_set_style_border_color(auton_dd, lv_color_hex(0xd22730), 0);
 	lv_obj_set_style_border_color(auton_dd, lv_color_hex(0x7a7a7a), LV_STATE_DISABLED);
 	lv_obj_align(auton_dd, LV_ALIGN_TOP_RIGHT, 0, 0);
-} */
+} 

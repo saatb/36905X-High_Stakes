@@ -6,5 +6,7 @@ namespace Robot {
         public:
         Intake ();
         void run();
+        void autoRun(int direction, int speed);
+        void stop();
     };
 }

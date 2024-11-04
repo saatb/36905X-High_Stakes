@@ -6,6 +6,8 @@ namespace Robot{
     class autonSelectorScreen{
     public:
         
+        autonSelectorScreen();
+
         void selector();
 
     private:
