@@ -17,6 +17,13 @@ using namespace lemlib;
 Autonomous::routine Autonomous::auton = blueRight;
 std::string				  Autonomous::autonName;
 
+/*
+NOTES:
+   - imu is mounted horizontally, so x and y are FLIPPED from path.jerryio
+   - towards negative corner is NEGATIVE x, toward positive corner is POSITIVE x (opposite of path.jerryio)
+   - towards blue alliance is POSITIVE y, towards red alliance is NEGATIVE y (same as path.jerryio)
+*/
+
 void Autonomous::auton1(Intake &intake, Clamp &clamp){
     // autonomous 1 --> redLeft, blueRight (single mogo) DON'T KNOW IF WORKS ON BOTH SIDES
 
@@ -25,6 +32,7 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
     //then touches ladder (most likely, zipties)
 
     //release first stage
+    
     intake.autoRun(-1, 600);
     pros::delay(300);
     intake.stop();
@@ -45,11 +53,11 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
     intake.autoRun(1, 600);
 
     //move to single stack adjacent to mogo 
-    chassis.moveToPoint(7.296, -32.919,5000);
+    chassis.moveToPoint(7.296, -32.919,5000); // x-coord from jerry was 38.596
 
     //could motion chain these
 
-    //slowly move to double stack of rings on midline
+    //slowly move to leftmost stack of rings on midline
     chassis.moveToPoint(7.296, -1.618, 5000, {.maxSpeed = 30});
 }
 
