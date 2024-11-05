@@ -7,7 +7,7 @@ using namespace Robot;
 using namespace Robot::Global;
 
 void Clamp::run(){
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
         Clamp::toggle();
     }
 }

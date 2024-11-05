@@ -55,10 +55,21 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
     //move to single stack adjacent to mogo 
     chassis.moveToPoint(7.296, -32.919,5000); // x-coord from jerry was 38.596
 
-    //could motion chain these
-
     //slowly move to leftmost stack of rings on midline
-    chassis.moveToPoint(7.296, -1.618, 5000, {.maxSpeed = 30});
+    chassis.moveToPose(-7.296, -18.919, 0, 3500);
+
+    //back up to prepare for second stack of rings
+    chassis.moveToPoint(-8.296, -30.919, 5000, {.forwards = false});
+
+    //move to second stack
+    chassis.moveToPose(-2.296, -12.919, 30, 3500); //{.maxspeed = 35}
+
+    //back up after scoring
+    chassis.moveToPoint(-8.296, -24.919, 5000, {.forwards = false});
+    pros::delay(1000);
+    
+    //go to ladder
+    chassis.moveToPose(40.5, -32.919, 40, 5000);
 }
 
 void Autonomous::auton2(Intake &intake, Clamp &clamp){

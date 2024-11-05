@@ -112,18 +112,7 @@ void autonomous() {
 
 
 void opcontrol() {
-	auto startTime = std::chrono::steady_clock::now();
-	bool flagged = false;
-
 	while (true){
-		auto currentTime = std::chrono::steady_clock::now();
-		auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-
-		if (elapsedTime >= 85 && !flagged){
-			controller.rumble(".-.-");
-			flagged = true;
-		}
-
 		subsystem.drivetrain.run();
 		subsystem.intake.run();
 		subsystem.clamp.run();
