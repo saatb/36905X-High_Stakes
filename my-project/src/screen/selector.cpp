@@ -11,7 +11,6 @@ autonSelectorScreen::autonSelectorScreen(){
 // hi!
 };
 
-//update ui
 void autonSelectorScreen::autonUiUpdate(lv_event_t *e){
     lv_obj_t *tab1			 = lv_event_get_current_target(e);
 	lv_obj_t *event_obj		 = lv_event_get_target(e);
@@ -58,7 +57,6 @@ void autonSelectorScreen::autonUiUpdate(lv_event_t *e){
 	lv_label_set_text_fmt(autonLabel, "Current Auton: %s", Autonomous::autonName.c_str());
 }
 
-//actually select auton
 void autonSelectorScreen::selector(){
 	//Create a Tab view object
 	lv_obj_t *tabview;
@@ -100,7 +98,7 @@ void autonSelectorScreen::selector(){
 	lv_obj_set_style_pad_all(skillSwitch, -5, LV_PART_KNOB);
 	lv_obj_align(skillSwitch, LV_ALIGN_CENTER, 0, 0);
 
-	//drop down to 
+	//drop down
 	lv_obj_t *auton_dd = lv_dropdown_create(tab1);
 	lv_obj_add_flag(auton_dd, LV_OBJ_FLAG_EVENT_BUBBLE);
 	lv_dropdown_set_options(auton_dd, autonSelectorScreen::redAutons);
