@@ -1,5 +1,6 @@
 #include "robot/auton.h"
 #include "globals.h"
+#include "lemlib/chassis/chassis.hpp"
 #include "main.h" // IWYU pragma: export
 #include "pros/rtos.hpp"
 #include "robot/clamp.h"
@@ -17,7 +18,7 @@ using namespace lemlib;
 Autonomous::routine Autonomous::auton = blueRight;
 std::string				  Autonomous::autonName;
 
-bool quals = false;
+bool quals = true;
 bool goalRush = false;
 
 /*
@@ -35,9 +36,38 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
     //line up straight back from mogo
     //picks up mogo, then scores preload + adjacent ring, then scores both midline rings
     //then touches ladder with intake
+
+    //release first stage
+   intake.autoRun(-1, 600);
+   pros::delay(300);
+   intake.stop();
+
+   if (goalRush == false){
+    //set pose
+    chassis.setPose(-22.946, -60.144, 180 );
+
+    //move to mogo, motion chained
+    chassis.moveToPoint(-22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
+    chassis.moveToPoint(-22.946, -32.919, 5000, {.forwards = false, .maxSpeed = 63});
+    pros::delay(500);
+
+    //clamp mogo
+    clamp.toggle();
+    pros::delay(300);
+
+    //start scoring rings
+    intake.autoRun(1, 600);
+
+    //move to single stack adjacent to mogo 
+    chassis.moveToPoint(-7.296, -32.919,5000); // x-coord from jerry was 38.596
+
+   }
+
+    
 }
 
 void Autonomous::auton2(Intake &intake, Clamp &clamp){
+   //DONE
    // autonomous 2 --> redLeft (single mogo)
 
     //line up straight back from mogo
@@ -45,7 +75,6 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
     //then touches ladder with intake
 
     //release first stage
-    
     intake.autoRun(-1, 600);
     pros::delay(300);
     intake.stop();
@@ -69,13 +98,13 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
     chassis.moveToPoint(7.296, -32.919,5000); // x-coord from jerry was 38.596
 
     //slowly move to leftmost stack of rings on midline
-    chassis.moveToPose(-7.296, -18.919, 10, 3000);
+    chassis.moveToPose(-6.296, -18.919, 0, 3000);
 
     //back up to prepare for second stack of rings
-    chassis.moveToPoint(0, -30.919, 5000, {.forwards = false});
+    chassis.moveToPoint(0, -30.919, 2000, {.forwards = false});
 
     //move to second stack
-    chassis.moveToPose(-2.296, -12.919, 0, 3500); //{.maxspeed = 35}
+    chassis.moveToPose(-1.296, -15.919, 5, 3500);
 
     //back up after scoring
     chassis.moveToPoint(-8.296, -24.919, 5000, {.forwards = false});
@@ -95,10 +124,11 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
     //ELIMS CODE
     //get as close to positive corner as possible with back of robot
     chassis.moveToPoint(84.95, -40.919, 5000, {.forwards = false});}
+    
 }
 
 void Autonomous::auton3(Intake &intake, Clamp &clamp){
-   //TODO: make autonomous 3 redRight -->
+   //TODO: make autonomous 3 redRight --> goal rush or two ring
 
    //release first stage
    intake.autoRun(-1, 600);
@@ -106,13 +136,23 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
    intake.stop();
 
    if (goalRush == false){
-   //set pose
-   chassis.setPose(22.946, -60.144, 180 );
+    //set pose
+    chassis.setPose(-22.946, -60.144, 180 );
 
-   //move to mogo, motion chained
-   chassis.moveToPoint(-22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-   chassis.moveToPoint(-22.946, -32.919, 5000, {.forwards = false, .maxSpeed = 63});
-   pros::delay(500);
+    //move to mogo, motion chained
+    chassis.moveToPoint(-22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
+    chassis.moveToPoint(-22.946, -32.919, 5000, {.forwards = false, .maxSpeed = 63});
+    pros::delay(500);
+
+    //clamp mogo
+    clamp.toggle();
+    pros::delay(300);
+
+    //start scoring rings
+    intake.autoRun(1, 600);
+
+    //move to single stack adjacent to mogo 
+    chassis.moveToPoint(-7.296, -32.919,5000); // x-coord from jerry was 38.596
 
    }
 
