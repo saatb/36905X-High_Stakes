@@ -345,7 +345,23 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp){
 
 
 void Autonomous::autonMove(Intake &intake, Clamp &clamp){
-    auton1(intake, clamp);
+    switch (Autonomous::auton) {
+   case blueRight:
+      auton1(intake, clamp);
+      break;
+   case redLeft:
+      auton2(intake, clamp);
+      break;
+   case redRight:
+      auton3(intake, clamp);
+      break;
+   case blueLeft:
+      auton4(intake, clamp);
+      break;
+   case skills:
+      auton5(intake, clamp);
+      break;
+   }
 }
 
 void Autonomous::autonSwitcher(int autonNum)
