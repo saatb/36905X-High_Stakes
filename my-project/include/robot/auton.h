@@ -8,7 +8,7 @@ namespace Robot {
 
     class Autonomous{
         public:
-            enum routine {redLeft = 1, redRight = 2, skills = 0, blueLeft = -1, blueRight = -2};
+            enum routine { redLeft = 1, redRight = 2, blueLeft = -1, blueRight = -2, skills = 0, };
             
             static routine auton;
 
@@ -16,7 +16,7 @@ namespace Robot {
 
             void autonMove(Intake &intake, Clamp &clamp);
 
-            static void autonSwitcher(int routine);
+            static void autonSwitcher(int autonNum);
 
         private:
             void auton1(Intake &intake, Clamp &clamp);
