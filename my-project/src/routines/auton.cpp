@@ -15,10 +15,10 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = blueLeft;
+Autonomous::routine Autonomous::auton = blueRight;
 std::string				  Autonomous::autonName;
 
-bool quals = false;
+bool quals = true;
 bool goalRush = false;
 
 /*
@@ -30,7 +30,7 @@ NOTES:
 */
 
 void Autonomous::auton1(Intake &intake, Clamp &clamp){
-   controller.print(0, 0, "blue right, quals: %d", quals);
+   controller.print(0, 0, "br, quals: %d", quals);
     // autonomous 1 --> blueRight (single mogo)
     // CHANGED FROM redLeft by inverting y-values (neg to pos) and theta - 180
 
@@ -91,7 +91,7 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
    }
 
 void Autonomous::auton2(Intake &intake, Clamp &clamp){
-   controller.print(0, 0, "red left, quals: %d", quals);
+   controller.print(0, 0, "rl, quals: %d", quals);
    //DONE
    //autonomous 2 --> redLeft (single mogo)
 
@@ -153,7 +153,7 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
 }
 
 void Autonomous::auton3(Intake &intake, Clamp &clamp){
-   controller.print(0, 0, "red right, quals: %d, goal rush: %d", quals, goalRush);
+   controller.print(0, 0, "rr, quals: %d, goal rush: %d", quals, goalRush);
    //autonomous 3 redRight --> goal rush or safe two ring
    // safe two ring touches ladder in quals, moves near pos corner in elims
 
@@ -248,7 +248,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
 }
 
 void Autonomous::auton4(Intake &intake, Clamp &clamp){
-controller.print(0, 0, "blue left, quals: %d, goal rush: %d", quals, goalRush);
+controller.print(0, 0, "bl, quals: %d, goal rush: %d", quals, goalRush);
 
    //TODO: make autonomous 4 blueLeft --> goal rush or safe two ring
    // safe two ring touches ladder in quals, moves near pos corner in elims
