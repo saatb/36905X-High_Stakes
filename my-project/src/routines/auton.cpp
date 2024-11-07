@@ -15,10 +15,10 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = blueRight;
+Autonomous::routine Autonomous::auton = blueLeft;
 std::string				  Autonomous::autonName;
 
-bool quals = true;
+bool quals = false;
 bool goalRush = false;
 
 /*
@@ -30,6 +30,7 @@ NOTES:
 */
 
 void Autonomous::auton1(Intake &intake, Clamp &clamp){
+   controller.print(0, 0, "blue right, quals: %d", quals);
     // autonomous 1 --> blueRight (single mogo)
     // CHANGED FROM redLeft by inverting y-values (neg to pos) and theta - 180
 
@@ -78,7 +79,7 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
     //stop intake, keep conveyor going to score ring if needed
     intakeMotor.move_velocity(0);
 
-    if (quals){
+    if (quals == true){
     //QUALS CODE
     //go to ladder and touch with intake
     chassis.moveToPose(43.5, 32.919, (5 - 180), 5000);}
@@ -90,6 +91,7 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
    }
 
 void Autonomous::auton2(Intake &intake, Clamp &clamp){
+   controller.print(0, 0, "red left, quals: %d", quals);
    //DONE
    //autonomous 2 --> redLeft (single mogo)
 
@@ -138,7 +140,7 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
     //stop intake, keep conveyor going to score ring if needed
     intakeMotor.move_velocity(0);
 
-    if (quals){
+    if (quals == true){
     //QUALS CODE
     //go to ladder and touch with intake
     chassis.moveToPose(40.5, -32.919, 40, 5000);}
@@ -147,10 +149,11 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
     //ELIMS CODE
     //get as close to positive corner as possible with back of robot
     chassis.moveToPoint(75.95, -40.919, 5000, {.forwards = false});}
-    
+
 }
 
 void Autonomous::auton3(Intake &intake, Clamp &clamp){
+   controller.print(0, 0, "red right, quals: %d, goal rush: %d", quals, goalRush);
    //autonomous 3 redRight --> goal rush or safe two ring
    // safe two ring touches ladder in quals, moves near pos corner in elims
 
@@ -181,7 +184,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
     //allow time to score
     pros::delay(3000);
 
-    if (quals){
+    if (quals == true){
       //turn around to drop mogo
       chassis.turnToHeading(270, 1500);
       pros::delay(500);
@@ -223,7 +226,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
    //stop intake since we're done picking up rings
    intakeMotor.move_velocity(0);
 
-   if (quals){
+   if (quals == true){
       //move behind other mogo
       chassis.moveToPose(-47.804, -46.943, 270, 5000);
 
@@ -245,9 +248,11 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
 }
 
 void Autonomous::auton4(Intake &intake, Clamp &clamp){
+controller.print(0, 0, "blue left, quals: %d, goal rush: %d", quals, goalRush);
+
    //TODO: make autonomous 4 blueLeft --> goal rush or safe two ring
    // safe two ring touches ladder in quals, moves near pos corner in elims
-   //CHANGED from redRight by inverting y-values (neg to pos) and 180 - theta for commands
+   //CHANGED from redRight by inverting y-values (neg to pos) and theta - 180 for commands
 
    //release first stage
    intake.autoRun(-1, 600);
@@ -276,7 +281,7 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp){
     //allow time to score
     pros::delay(3000);
 
-    if (quals){
+    if (quals == true){
       //turn around to drop mogo
       chassis.turnToHeading((180 - 270), 1500);
       pros::delay(500);
@@ -286,7 +291,7 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp){
       clamp.toggle();
 
       //go and touch ladder
-      chassis.moveToPoint(-36, 32.19, 5000);
+      chassis.moveToPose(-35, 32.19, 45 - 180, 5000);
     }
     else {
     //move to pos corner
@@ -302,7 +307,7 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp){
 
    //rush goal, motion chained
    chassis.moveToPoint(-35.804, 25.348, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-   chassis.moveToPose(-24.804, 16.398, (215 - 180), 2500, {.forwards = false, .maxSpeed = 63});
+   chassis.moveToPose(-24.804, 14.398, (180 - 215), 2500, {.forwards = false, .maxSpeed = 63});
    pros::delay(1750);
 
    //clamp goal
@@ -310,7 +315,7 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp){
    pros::delay(300);
 
    //swing to stack of rings and pick up
-   chassis.swingToHeading((135 - 180), DriveSide::LEFT, 1500);
+   chassis.swingToHeading((180-135), DriveSide::RIGHT, 1500);
    intake.autoRun(1, 600);
 
    pros::delay(3000);
@@ -318,18 +323,18 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp){
    //stop intake since we're done picking up rings
    intakeMotor.move_velocity(0);
 
-   if (quals){
+   if (quals == true){
       //move behind other mogo
-      chassis.moveToPose(-47.804, 46.943, (270 - 180), 5000);
+      chassis.moveToPose(-47.804, 46.943, (180 - 270), 5000);
 
       //drop mogo and stop conveyor
       intake.stop();
       clamp.toggle();
 
       //go and touch ladder
-      chassis.moveToPoint(-60, 32.19, 5000);
+      chassis.moveToPose(-59, 36.19, 45 - 180,5000);
    }
-   else{
+   else if (quals == false){
       //move to pos corner BACKWARDS
       chassis.moveToPoint(-11.804, 58.943, 5000, {.forwards = false});
 
@@ -340,6 +345,7 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp){
 }
 
 void Autonomous::auton5(Intake &intake, Clamp &clamp){
+   controller.print(0, 0, "skills");
    //TODO: make autonomous 5 --> skills
 }
 

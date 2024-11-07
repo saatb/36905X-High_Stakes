@@ -79,7 +79,9 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+	screen.selector.selector();
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
