@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = blueRight;
+Autonomous::routine Autonomous::auton = redRight;
 std::string				  Autonomous::autonName;
 
 bool quals = true;
@@ -30,7 +30,7 @@ NOTES:
 */
 
 void Autonomous::auton1(Intake &intake, Clamp &clamp){
-   controller.print(0, 0, "br, quals: %d", quals);
+   controller.print(0, 0, "br, q: %d", quals);
     // autonomous 1 --> blueRight (single mogo)
     // CHANGED FROM redLeft by inverting y-values (neg to pos) and theta - 180
 
@@ -91,7 +91,7 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
    }
 
 void Autonomous::auton2(Intake &intake, Clamp &clamp){
-   controller.print(0, 0, "rl, quals: %d", quals);
+   controller.print(0, 0, "rl, q: %d", quals);
    //DONE
    //autonomous 2 --> redLeft (single mogo)
 
@@ -153,7 +153,7 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
 }
 
 void Autonomous::auton3(Intake &intake, Clamp &clamp){
-   controller.print(0, 0, "rr, quals: %d, goal rush: %d", quals, goalRush);
+   controller.print(0, 0, "rr, q: %d, gr: %d", quals, goalRush);
    //autonomous 3 redRight --> goal rush or safe two ring
    // safe two ring touches ladder in quals, moves near pos corner in elims
 
@@ -248,7 +248,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
 }
 
 void Autonomous::auton4(Intake &intake, Clamp &clamp){
-controller.print(0, 0, "bl, quals: %d, goal rush: %d", quals, goalRush);
+controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
 
    //TODO: make autonomous 4 blueLeft --> goal rush or safe two ring
    // safe two ring touches ladder in quals, moves near pos corner in elims
@@ -284,7 +284,6 @@ controller.print(0, 0, "bl, quals: %d, goal rush: %d", quals, goalRush);
     if (quals == true){
       //turn around to drop mogo
       chassis.turnToHeading((180 - 270), 1500);
-      pros::delay(500);
 
       //stop intake and drop mogo
       intake.stop();
@@ -345,8 +344,12 @@ controller.print(0, 0, "bl, quals: %d, goal rush: %d", quals, goalRush);
 }
 
 void Autonomous::auton5(Intake &intake, Clamp &clamp){
-   controller.print(0, 0, "skills");
-   //TODO: make autonomous 5 --> skills
+   bool allianceStake = false;
+   controller.print(0, 0, "skills, as: %d", allianceStake);
+   //autonomous 5 --> skills 
+   // starts right against alliance stake
+
+   
 }
 
 
