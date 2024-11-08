@@ -3,6 +3,8 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"
 #include "liblvgl/llemu.hpp"
+#include "liblvgl/misc/lv_area.h"
+#include "liblvgl/widgets/lv_img.h"
 #include "pros/adi.h"
 #include "pros/adi.hpp"
 #include "pros/device.h"
@@ -21,6 +23,15 @@
 #include "robot/intake.h"
 #include "robot/clamp.h"
 #include "screen/selector.h"
+
+LV_IMG_DECLARE(test1);
+LV_IMG_DECLARE(test2);
+LV_IMG_DECLARE(test3);
+LV_IMG_DECLARE(test4);
+LV_IMG_DECLARE(test5);
+LV_IMG_DECLARE(test6);
+LV_IMG_DECLARE(test7);
+LV_IMG_DECLARE(test8);
 
 using namespace Robot;
 using namespace Robot::Global;
@@ -43,7 +54,6 @@ struct RobotScreen{
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
 	if (pros::c::get_plugged_type(10) == pros::c::E_DEVICE_IMU) {
       chassis.calibrate();
    }
@@ -52,7 +62,7 @@ void initialize() {
 	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-	screen.selector.selector();
+	//screen.selector.selector();
 	/*pros::Task screen_task([&](){
 		while (true){
 			pros::lcd::print(0, "X: %f", chassis.getPose().x);
@@ -68,7 +78,11 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+	lv_obj_t *img = lv_img_create(lv_scr_act());
+	lv_img_set_src(img, &test2);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -95,6 +109,9 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+	lv_obj_t *img = lv_img_create(lv_scr_act());
+	lv_img_set_src(img, &test1);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);
 	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp);
 }
 
@@ -114,6 +131,9 @@ void autonomous() {
 
 
 void opcontrol() {
+	lv_obj_t *img = lv_img_create(lv_scr_act());
+	lv_img_set_src(img, &test3);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);
 	while (true){
 		subsystem.drivetrain.run();
 		subsystem.intake.run();
