@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "36905X High Stakes img",
+    "project_name": "36905X High Stakes",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -300,7 +300,7 @@
     "upload_options": {
       "icon": "pros",
       "description": "Competition Program",
-      "slot": 2
+      "slot": 1
     },
     "use_early_access": false
   }
