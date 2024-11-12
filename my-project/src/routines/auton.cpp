@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = redRight;
+Autonomous::routine Autonomous::auton = redLeft;
 std::string				  Autonomous::autonName;
 
 bool quals = true;
@@ -121,7 +121,8 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
 
     //move to single stack adjacent to mogo 
     chassis.moveToPoint(7.296, -32.919,5000); // x-coord from jerry was 38.596
-
+    pros::delay(1000);
+    chassis.moveToPoint(7.296, -37.919,5000, {.forwards = false});
     //slowly move to leftmost stack of rings on midline
     chassis.moveToPose(-6.296, -18.919, 0, 3000);
 
@@ -290,7 +291,7 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
       clamp.toggle();
 
       //go and touch ladder
-      chassis.moveToPose(-35, 32.19, 45 - 180, 5000);
+      chassis.moveToPose(-38, 32.19, 45 - 180, 5000);
     }
     else {
     //move to pos corner
@@ -348,8 +349,26 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp){
    controller.print(0, 0, "skills, as: %d", allianceStake);
    //autonomous 5 --> skills 
    // starts right against alliance stake
+   //release first stage
+   intake.autoRun(-1, 600);
+   pros::delay(300);
+   intake.stop();
 
-   
+   chassis.setPose(0, 0, 0);
+   intake.run();
+   chassis.moveToPose(-16.579, 11.954, 90, 5000, {.forwards = false});
+   pros::delay(500);
+   clamp.toggle();
+   pros::delay(500);
+   chassis.moveToPoint(-23.497, 34.635, 5000);
+   chassis.moveToPoint(-60.122, 59.176, 5000);
+   chassis.moveToPoint(-48.782, 35.937, 5000);
+   chassis.moveToPoint(-48.596, 11.954, 5000);
+   chassis.moveToPoint(-48.596, 0.055, 5000);
+   chassis.moveToPoint(-60.122,11.582, 5000);
+   chassis.moveToPoint(-59.565, 27.943, 5000);
+   chassis.moveToPoint(-59.007, -0.13, 5000, {.forwards = false});
+
 }
 
 
