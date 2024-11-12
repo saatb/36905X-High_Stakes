@@ -4,6 +4,7 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "liblvgl/misc/lv_area.h"
 #include "pros/motors.hpp"
+#include "pros/optical.hpp"
 
 namespace Robot{
 
@@ -34,4 +35,6 @@ namespace Global {
     extern lemlib::Chassis chassis;
 
     extern pros::adi::Pneumatics clampControl;
+
+    extern pros::Optical optical;
 }}

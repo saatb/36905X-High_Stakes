@@ -4,6 +4,7 @@
 #include "pros/adi.hpp"
 #include "pros/misc.h"
 #include "pros/misc.hpp"
+#include "pros/optical.hpp"
 
 namespace Robot{
 namespace Global{
@@ -58,5 +59,7 @@ namespace Global{
     );
 
     lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);
+
+    pros::Optical optical(19);
 }
 }
