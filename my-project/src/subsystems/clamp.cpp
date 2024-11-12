@@ -12,6 +12,6 @@ void Clamp::run(){
     }
 }
 
-Clamp::Clamp(){;}
+Clamp::Clamp(){}
 
 void Clamp::toggle() {clampControl.toggle();}

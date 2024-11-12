@@ -14,6 +14,8 @@ namespace Robot {
 
             static std::string autonName;
 
+            static std::string allianceColor;
+
             void autonMove(Intake &intake, Clamp &clamp);
 
             static void autonSwitcher(int autonNum);

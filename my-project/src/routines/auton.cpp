@@ -398,18 +398,22 @@ void Autonomous::autonSwitcher(int autonNum)
 	case 1:
 		Autonomous::autonName = "Red Left";
 		Autonomous::auton	  = redLeft;
+      Autonomous::allianceColor = "red";
 		break;
 	case 2:
 		Autonomous::autonName = "Red Right";
 		Autonomous::auton	  = redRight;
+      Autonomous::allianceColor = "red";
 		break;
 	case -1:
 		Autonomous::autonName = "Blue Left";
 		Autonomous::auton	  = blueLeft;
+      Autonomous::allianceColor = "blue";
 		break;
 	case -2:
 		Autonomous::autonName = "Blue Right";
 		Autonomous::auton	  = blueRight;
+      Autonomous::allianceColor = "blue";
 		break;
 	}
 	std::cout << "Current auton: " + Autonomous::autonName << std::endl;
