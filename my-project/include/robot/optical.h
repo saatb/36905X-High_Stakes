@@ -4,7 +4,8 @@ namespace Robot{
     class Optical {
         public:
         Optical();
-        std::string checkDistance();
-        std::string checkColor(std::pmr::string allianceColor);
+        enum colors {red, blue};
+        bool isClose();
+        bool isOppositeColor(std::pmr::string allianceColor);
     };
 }

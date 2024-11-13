@@ -62,6 +62,8 @@ void initialize() {
 	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
+	optical.set_led_pwm(20);
+
 	//screen.selector.selector();
 	/*pros::Task screen_task([&](){
 		while (true){
@@ -136,7 +138,7 @@ void opcontrol() {
 	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);
 	while (true){
 		subsystem.drivetrain.run();
-		subsystem.intake.run();
+		subsystem.intake.run(Autonomous::allianceColor);
 		subsystem.clamp.run();
 		pros::delay(20);
 	}

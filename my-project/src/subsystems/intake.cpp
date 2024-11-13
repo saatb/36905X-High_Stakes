@@ -27,8 +27,29 @@ void Intake::run(std::string allianceColor) {
 }
 
 void Intake::autoRun(int direction, int speed, std::string allianceColor){
+    int conveyorState = 0;
+    int runningTime = 0;
+    int lowerBound = 0;
+    int upperBound = 0;
+    if (allianceColor == "red"){
+
+    };
+
+
+    while (true){
+        if ((conveyorState == 0) && (optical.get_proximity() > 180)){
+            if (lowerBound < optical.get_hue() < upperBound){
+
+            }
+        }
+    }
+
+    /*
     intakeMotor.move_velocity((direction * speed));
     conveyorMotor.move_velocity((direction * speed));
+    */
+
+
 }
 
 void Intake::stop(){

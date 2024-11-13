@@ -415,6 +415,10 @@ void Autonomous::autonSwitcher(int autonNum)
 		Autonomous::auton	  = blueRight;
       Autonomous::allianceColor = "blue";
 		break;
+   case 0:
+      Autonomous::autonName = "Skills";
+      Autonomous::auton    = skills;
+      Autonomous::allianceColor = "red";
 	}
 	std::cout << "Current auton: " + Autonomous::autonName << std::endl;
 }
