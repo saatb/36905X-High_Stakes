@@ -62,7 +62,8 @@ void initialize() {
 	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-	optical.set_led_pwm(20);
+	optical.disable_gesture();
+	optical.set_led_pwm(25);
 
 	//screen.selector.selector();
 	/*pros::Task screen_task([&](){
@@ -81,9 +82,9 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	lv_obj_t *img = lv_img_create(lv_scr_act());
+	/*lv_obj_t *img = lv_img_create(lv_scr_act());
 	lv_img_set_src(img, &test2);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
 }
 
 /**
@@ -111,9 +112,9 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	lv_obj_t *img = lv_img_create(lv_scr_act());
+	/*lv_obj_t *img = lv_img_create(lv_scr_act());
 	lv_img_set_src(img, &test1);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
 	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp);
 }
 
@@ -133,9 +134,9 @@ void autonomous() {
 
 
 void opcontrol() {
-	lv_obj_t *img = lv_img_create(lv_scr_act());
+	/*lv_obj_t *img = lv_img_create(lv_scr_act());
 	lv_img_set_src(img, &test3);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
 	while (true){
 		subsystem.drivetrain.run();
 		subsystem.intake.run(Autonomous::allianceColor);

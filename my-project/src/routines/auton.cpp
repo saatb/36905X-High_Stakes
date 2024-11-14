@@ -17,6 +17,7 @@ using namespace lemlib;
 
 Autonomous::routine Autonomous::auton = redLeft;
 std::string				  Autonomous::autonName;
+std::string Autonomous::allianceColor;
 
 bool quals = true;
 bool goalRush = false;
@@ -355,7 +356,7 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp){
    intake.stop();
 
    chassis.setPose(0, 0, 0);
-   intake.run();
+   intake.autoRun(1, 600);
    chassis.moveToPose(-16.579, 11.954, 90, 5000, {.forwards = false});
    pros::delay(500);
    clamp.toggle();
