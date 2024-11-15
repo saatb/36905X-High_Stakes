@@ -13,22 +13,22 @@ Intake::Intake() {
 }
 
 void Intake::run(std::string allianceColor) {
-    std::string allianceColor1 = "blue";
+    std::string allianceColor1 = "red";
+    int conveyorState = 0;
+    double redLower = 0;
+    double redUpper = 40;
+    double blueLower = 150;
+    double blueUpper = 270;
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
         intakeMotor.move_velocity(600);
         conveyorMotor.move_velocity(600);
 
     controller.print(1,0, std::to_string(optical.get_hue()).c_str());
-    int conveyorState = 0;
-    double redLower = 0;
-    double redUpper = 30;
-    double blueLower = 150;
-    double blueUpper = 270;
 
-    //while (true){
-        if ((conveyorState == 0) && (optical.get_proximity() > 180)){
-        if (((allianceColor1 == "red") && (blueLower < optical.get_hue() < blueUpper)) || 
-            ((allianceColor1 == "blue") && (redLower < optical.get_hue() < redUpper))){
+    
+        if ((conveyorState == 0 && optical.get_proximity() > 180)){
+        if (((allianceColor1 == "red" && blueLower < optical.get_hue())) || 
+            ((allianceColor1 == "blue" && redLower < optical.get_hue()))){
                 conveyorState = 1;
         }           
         }
@@ -38,7 +38,7 @@ void Intake::run(std::string allianceColor) {
             //do nothing
             break;
             case 1:
-            pros::delay(50);
+            pros::delay(75);
             intakeMotor.move_velocity((0));
             conveyorMotor.move_velocity((0));
             conveyorState = 2;
@@ -47,8 +47,7 @@ void Intake::run(std::string allianceColor) {
             conveyorState = 0;
             break;
         }
-        //pros::delay(20);*/
-    //}
+        
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
         intakeMotor.move_velocity(-600);
