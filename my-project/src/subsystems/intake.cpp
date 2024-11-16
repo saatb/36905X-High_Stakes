@@ -27,8 +27,8 @@ void Intake::run(std::string allianceColor = "red") {
 
     
         if ((conveyorState == 0 && optical.get_proximity() > 180)){ //check if there's an object close to the sensor
-        if (((allianceColor == "red" && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
-            ((allianceColor == "blue" && redLower < optical.get_hue()))){
+        if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
+            ((allianceColor == std::string("blue") && redLower < optical.get_hue()))){
                 conveyorState = 1; //if the object is of the opposite color, trigger the state change
         }           
         }
@@ -38,9 +38,13 @@ void Intake::run(std::string allianceColor = "red") {
             //do nothing
             break;
             case 1:
+            controller.print(1, 0, "ring found!");
             //NEED TO TUNE: make ring fly off conveyor, switch back to normal state
-            pros::delay(85);
-            intakeMotor.move_velocity((0));
+            pros::delay(155);
+            conveyorMotor.move_velocity((0));
+            pros::delay(70);
+            conveyorMotor.move_velocity((-600));
+            pros::delay(70);
             conveyorMotor.move_velocity((0));
             conveyorState = 2;
             break;
