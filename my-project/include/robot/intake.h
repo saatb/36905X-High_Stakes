@@ -6,7 +6,7 @@ namespace Robot {
     class Intake  {
         public:
         Intake();
-        void run(std::string allianceColor);
+        void run(std::string allianceColor = std::string("red"));
         void autoRun(int direction, int speed);
         void stop();
     };

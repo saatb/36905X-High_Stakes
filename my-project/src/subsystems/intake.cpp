@@ -12,7 +12,8 @@ using namespace Robot::Global;
 Intake::Intake() {
 }
 
-void Intake::run(std::string allianceColor = "red") {
+void Intake::run(std::string allianceColor) {
+    //set the state of the conveyor
     int conveyorState = 0;
     //variables for hue ranges of rings!
     double redLower = 0;
@@ -22,9 +23,6 @@ void Intake::run(std::string allianceColor = "red") {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
         intakeMotor.move_velocity(600); //spin motors at full speed ^-^
         conveyorMotor.move_velocity(600);
-
-        controller.print(1,0, std::to_string(optical.get_hue()).c_str()); //testing
-
     
         if ((conveyorState == 0 && optical.get_proximity() > 180)){ //check if there's an object close to the sensor
         if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
@@ -51,6 +49,7 @@ void Intake::run(std::string allianceColor = "red") {
             case 2:
             //change state back to normal to rerun process
             conveyorState = 0;
+            controller.clear_line(1);
             break;
         }
         
