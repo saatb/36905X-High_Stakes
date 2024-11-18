@@ -7,7 +7,7 @@ namespace Robot {
         public:
         Intake();
         void run(std::string allianceColor = std::string("red"));
-        void autoRun(int direction, int speed);
+        void autoRun(int direction, int speed, std::string allianceColor = std::string("red"));
         void stop();
     };
 }

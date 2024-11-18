@@ -41,7 +41,7 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
 
     //release first stage
     intake.autoRun(-1, 600);
-    pros::delay(300);
+    pros::delay(150);
     intake.stop();
 
     //set pose
@@ -102,7 +102,7 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
 
     //release first stage
     intake.autoRun(-1, 600);
-    pros::delay(300);
+    pros::delay(150);
     intake.stop();
 
     //set pose
@@ -161,7 +161,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
 
    //release first stage
    intake.autoRun(-1, 600);
-   pros::delay(300);
+   pros::delay(150);
    intake.stop();
 
    if (goalRush == false){
@@ -258,7 +258,7 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
 
    //release first stage
    intake.autoRun(-1, 600);
-   pros::delay(300);
+   pros::delay(150);
    intake.stop();
 
    if (goalRush == false){
@@ -347,12 +347,12 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
 
 void Autonomous::auton5(Intake &intake, Clamp &clamp){
    bool allianceStake = false;
-   controller.print(0, 0, "skills, as: %d", allianceStake);
+   controller.print(0, 0, "skills");
    //autonomous 5 --> skills 
    // starts right against alliance stake
    //release first stage
    intake.autoRun(-1, 600);
-   pros::delay(300);
+   pros::delay(150);
    intake.stop();
 
    chassis.setPose(0, 0, 0);
@@ -399,27 +399,27 @@ void Autonomous::autonSwitcher(int autonNum)
 	case 1:
 		Autonomous::autonName = "Red Left";
 		Autonomous::auton	  = redLeft;
-      Autonomous::allianceColor = "red";
+      Autonomous::allianceColor = std::string("red");
 		break;
 	case 2:
 		Autonomous::autonName = "Red Right";
 		Autonomous::auton	  = redRight;
-      Autonomous::allianceColor = "red";
+      Autonomous::allianceColor = std::string("red");
 		break;
 	case -1:
 		Autonomous::autonName = "Blue Left";
 		Autonomous::auton	  = blueLeft;
-      Autonomous::allianceColor = "blue";
+      Autonomous::allianceColor = std::string("blue");
 		break;
 	case -2:
 		Autonomous::autonName = "Blue Right";
 		Autonomous::auton	  = blueRight;
-      Autonomous::allianceColor = "blue";
+      Autonomous::allianceColor = std::string("blue");
 		break;
    case 0:
       Autonomous::autonName = "Skills";
       Autonomous::auton    = skills;
-      Autonomous::allianceColor = "red";
+      Autonomous::allianceColor = std::string("red");
 	}
 	std::cout << "Current auton: " + Autonomous::autonName << std::endl;
 }

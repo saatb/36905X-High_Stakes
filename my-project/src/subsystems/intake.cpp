@@ -64,7 +64,7 @@ void Intake::run(std::string allianceColor) {
     }
 }
 
-void Intake::autoRun(int direction, int speed){
+void Intake::autoRun(int direction, int speed, std::string allianceColor){
     int conveyorState = 0;
     int redLower = 10;
     int redUpper = 40;
