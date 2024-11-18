@@ -36,6 +36,7 @@ void Intake::run(std::string allianceColor) {
             //do nothing
             break;
             case 1:
+            if (distance.get_distance() > 50){
             controller.print(1, 0, "ring found!");
             //NEED TO TUNE: make ring fly off conveyor, switch back to normal state
             pros::delay(155);
@@ -44,7 +45,7 @@ void Intake::run(std::string allianceColor) {
             conveyorMotor.move_velocity((-600));
             pros::delay(70);
             conveyorMotor.move_velocity((0));
-            conveyorState = 2;
+            conveyorState = 2;}
             break;
             case 2:
             //change state back to normal to rerun process

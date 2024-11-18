@@ -2,6 +2,7 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/adi.hpp"
+#include "pros/distance.hpp"
 #include "pros/misc.h"
 #include "pros/misc.hpp"
 #include "pros/optical.hpp"
@@ -61,5 +62,6 @@ namespace Global{
     lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);
 
     pros::Optical optical(19);
+    pros::Distance distance(18);
 }
 }
