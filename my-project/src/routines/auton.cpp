@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = redLeft;
+Autonomous::routine Autonomous::auton = blueLeft;
 std::string				  Autonomous::autonName;
 
 bool quals = true;
@@ -165,11 +165,11 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
 
    if (goalRush == false){
     //set pose
-    chassis.setPose(-22.946, -60.144, 180 );
+    chassis.setPose(-22.946, -60.144, 180);
 
     //move to mogo, motion chained
     chassis.moveToPoint(-22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-    chassis.moveToPoint(-22.946, -32.919, 5000, {.forwards = false, .maxSpeed = 63});
+    chassis.moveToPoint(-22.946, -30.919, 5000, {.forwards = false, .maxSpeed = 63});
     pros::delay(500);
 
     //clamp mogo
@@ -178,6 +178,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
 
     //start scoring rings
     intake.autoRun(1, 600);
+    //pros::delay(500);
 
     //move to single stack adjacent to mogo 
     chassis.moveToPoint(-7.296, -32.919,5000); // x-coord from jerry was 38.596
@@ -191,11 +192,13 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
       pros::delay(500);
 
       //stop intake and drop mogo
-      intake.stop();
-      clamp.toggle();
+      intakeMotor.move_velocity(0);
+      //clamp.toggle();
 
       //go and touch ladder
-      chassis.moveToPoint(-36, -32.19, 5000);
+      chassis.moveToPoint(-38, -29.19, 5000, {.maxSpeed = 45});
+      pros::delay(3000);
+      intake.stop();
     }
     else {
     //move to pos corner
@@ -286,12 +289,14 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
       //turn around to drop mogo
       chassis.turnToHeading((180 - 270), 1500);
 
-      //stop intake and drop mogo
-      intake.stop();
-      clamp.toggle();
+      //stop intake
+      intakeMotor.move_velocity(0);
+      //clamp.toggle();
 
       //go and touch ladder
-      chassis.moveToPose(-38, 32.19, 45 - 180, 5000);
+      chassis.moveToPose(-40, 32.19, 45 - 180, 5000);
+      pros::delay(3000);
+      intake.stop();
     }
     else {
     //move to pos corner
@@ -348,18 +353,18 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp){
    bool allianceStake = false;
    controller.print(0, 0, "skills, as: %d", allianceStake);
    //autonomous 5 --> skills 
-   // starts right against alliance stake
+   // starts on alliance stake, DOESN'T SCORE ON IT RIGHT NOW
    //release first stage
    intake.autoRun(-1, 600);
    pros::delay(300);
    intake.stop();
 
    chassis.setPose(0, 0, 0);
-   intake.run();
    chassis.moveToPose(-16.579, 11.954, 90, 5000, {.forwards = false});
    pros::delay(500);
    clamp.toggle();
    pros::delay(500);
+   intake.autoRun(1, 600);
    chassis.moveToPoint(-23.497, 34.635, 5000);
    chassis.moveToPoint(-60.122, 59.176, 5000);
    chassis.moveToPoint(-48.782, 35.937, 5000);
@@ -411,6 +416,9 @@ void Autonomous::autonSwitcher(int autonNum)
 		Autonomous::autonName = "Blue Right";
 		Autonomous::auton	  = blueRight;
 		break;
+   case 0:
+      Autonomous::autonName = "Skills";
+      Autonomous::auton    = skills;
 	}
 	std::cout << "Current auton: " + Autonomous::autonName << std::endl;
 }
