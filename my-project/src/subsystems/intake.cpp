@@ -13,6 +13,7 @@ Intake::Intake() {
 }
 
 void Intake::run(std::string allianceColor) {
+    allianceColor = "red";
     //set the state of the conveyor
     int conveyorState = 0;
     //variables for hue ranges of rings!
@@ -23,6 +24,7 @@ void Intake::run(std::string allianceColor) {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
         intakeMotor.move_velocity(600); //spin motors at full speed ^-^
         conveyorMotor.move_velocity(600);
+        controller.print(1,0, std::to_string(distance.get_distance()).c_str()); 
     
         if ((conveyorState == 0 && optical.get_proximity() > 180)){ //check if there's an object close to the sensor
         if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
@@ -36,10 +38,9 @@ void Intake::run(std::string allianceColor) {
             //do nothing
             break;
             case 1:
-            if (distance.get_distance() > 50){
-            controller.print(1, 0, "ring found!");
+            if (distance.get_distance() < 4){
             //NEED TO TUNE: make ring fly off conveyor, switch back to normal state
-            pros::delay(155);
+            pros::delay(30);
             conveyorMotor.move_velocity((0));
             pros::delay(70);
             conveyorMotor.move_velocity((-600));
@@ -50,7 +51,6 @@ void Intake::run(std::string allianceColor) {
             case 2:
             //change state back to normal to rerun process
             conveyorState = 0;
-            controller.clear_line(1);
             break;
         }
         

@@ -61,7 +61,7 @@ namespace Global{
 
     lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);
 
-    pros::Optical optical(19);
+    pros::Optical optical(12);
     pros::Distance distance(18);
 }
 }
