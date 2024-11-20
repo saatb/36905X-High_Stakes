@@ -16,6 +16,7 @@
 #include "globals.h"
 #include "pros/apix.h"
 #include "pros/motors.h"
+#include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "pros/screen.h"
 #include "robot/drivetrain.h"
@@ -47,6 +48,43 @@ struct RobotScreen{
 	Robot::autonSelectorScreen selector;
 } screen;
 
+void myTask(){
+	std::string allianceColor = Autonomous::allianceColor;
+	int conveyorState = 0;
+    double redUpper = 40;
+    double blueLower = 150;
+	while (true){
+		if ((conveyorState == 0 && optical.get_proximity() > 180)){ //check if there's an object close to the sensor
+        	if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
+            	((allianceColor == std::string("blue") && redUpper > optical.get_hue()))){
+                	conveyorState = 1; //if the object is of the opposite color, trigger the state change
+        }           
+        }
+
+        switch (conveyorState){
+            case 0:
+            //do nothing
+            break;
+            case 1:
+            if (distance.get_distance() < 4){
+            //NEED TO TUNE: make ring fly off conveyor, switch back to normal state
+            pros::delay(30);
+            conveyorMotor.move_velocity((0));
+            pros::delay(70);
+            conveyorMotor.move_velocity((-600));
+            pros::delay(70);
+            conveyorMotor.move_velocity((0));
+            conveyorState = 2;}
+            break;
+            case 2:
+            //change state back to normal to rerun process
+            conveyorState = 0;
+            break;
+        }
+		pros::delay(10);
+}
+}
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -64,6 +102,8 @@ void initialize() {
 
 	optical.disable_gesture();
 	optical.set_led_pwm(25);
+
+	pros::Task::create(myTask, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "color sorting");
 
 	//screen.selector.selector();
 	/*pros::Task screen_task([&](){
@@ -118,6 +158,8 @@ void autonomous() {
 	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp);
 }
 
+
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -137,6 +179,7 @@ void opcontrol() {
 	/*lv_obj_t *img = lv_img_create(lv_scr_act());
 	lv_img_set_src(img, &test3);
 	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
+	//pros::Task::create(myTask, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "color sorting");
 	while (true){
 		subsystem.drivetrain.run();
 		subsystem.intake.run(Autonomous::allianceColor);
@@ -144,3 +187,4 @@ void opcontrol() {
 		pros::delay(20);
 	}
 }
+
