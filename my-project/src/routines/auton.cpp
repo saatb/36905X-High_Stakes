@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = blueLeft;
+Autonomous::routine Autonomous::auton = redLeft;
 std::string				  Autonomous::autonName;
 
 bool quals = true;
@@ -359,20 +359,36 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp){
    pros::delay(300);
    intake.stop();
 
-   chassis.setPose(0, 0, 0);
-   chassis.moveToPose(-16.579, 11.954, 90, 5000, {.forwards = false});
-   pros::delay(500);
+   chassis.setPose(0, 0, 180);
+   chassis.moveToPose(-20.579, 11.954, 90, 5000, {.forwards = false, .minSpeed = 25});
+   pros::delay(2000);
    clamp.toggle();
    pros::delay(500);
    intake.autoRun(1, 600);
-   chassis.moveToPoint(-23.497, 34.635, 5000);
-   chassis.moveToPoint(-60.122, 59.176, 5000);
-   chassis.moveToPoint(-48.782, 35.937, 5000);
-   chassis.moveToPoint(-48.596, 11.954, 5000);
-   chassis.moveToPoint(-48.596, 0.055, 5000);
-   chassis.moveToPoint(-60.122,11.582, 5000);
-   chassis.moveToPoint(-59.565, 27.943, 5000);
-   chassis.moveToPoint(-59.007, -0.13, 5000, {.forwards = false});
+
+   //move to nearest ring
+   chassis.moveToPoint(-23.497, 34.635, 5000, {.maxSpeed = 65});
+
+   //move to ring on centerline
+   chassis.moveToPoint(-59, 59.176, 5000, {.maxSpeed = 65});
+
+   //move to third ring
+   chassis.moveToPoint(-48.782, 35.937, 5000, {.maxSpeed = 65});
+
+   //move to first ring in group of 3
+   chassis.moveToPoint(-48.596, 11.954, 5000, {.maxSpeed = 65});
+
+   //move to alliance-wall-side ring
+   chassis.moveToPoint(-48.596, 1, 5000, {.maxSpeed = 65});
+
+   //move to neutral-wall-side ring
+   chassis.moveToPoint(-59,11.582, 5000, {.maxSpeed = 65});
+
+   //move away from corner
+   chassis.moveToPoint(-59, 27.943, 5000, {.maxSpeed = 65});
+
+   //move into corner
+   chassis.moveToPoint(-59.5, 1, 5000, {.forwards = false});
 
 }
 
