@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = redLeft;
+Autonomous::routine Autonomous::auton = skills;
 std::string				  Autonomous::autonName;
 
 bool quals = true;
@@ -82,7 +82,7 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
     if (quals == true){
     //QUALS CODE
     //go to ladder and touch with intake
-    chassis.moveToPose(43.5, 32.919, (5 - 180), 5000);}
+    chassis.moveToPose(40.5, 32.919, ( 40 + 180), 5000);}
 
     else {
     //ELIMS CODE
@@ -353,43 +353,69 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp){
    bool allianceStake = false;
    controller.print(0, 0, "skills, as: %d", allianceStake);
    //autonomous 5 --> skills 
-   // starts on alliance stake, DOESN'T SCORE ON IT RIGHT NOW
+   // starts right behind neg mogo --> corner, 1 2 3 4
    //release first stage
    intake.autoRun(-1, 600);
    pros::delay(300);
    intake.stop();
 
-   chassis.setPose(0, 0, 180);
-   chassis.moveToPose(-20.579, 11.954, 90, 5000, {.forwards = false, .minSpeed = 25});
-   pros::delay(2000);
+   chassis.setPose(-20.579, 0, 180);
+   chassis.moveToPoint(-20.579, 11.954, 5000, {.forwards = false, .minSpeed = 25});
+   pros::delay(1000);
    clamp.toggle();
    pros::delay(500);
    intake.autoRun(1, 600);
+   pros::delay(2500);
 
    //move to nearest ring
    chassis.moveToPoint(-23.497, 34.635, 5000, {.maxSpeed = 65});
+   pros::delay(2500);
 
    //move to ring on centerline
-   chassis.moveToPoint(-59, 59.176, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(-56, 59.176, 5000, {.maxSpeed = 65});
+   pros::delay(2500);
 
    //move to third ring
    chassis.moveToPoint(-48.782, 35.937, 5000, {.maxSpeed = 65});
+   pros::delay(2500);
 
    //move to first ring in group of 3
-   chassis.moveToPoint(-48.596, 11.954, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(-44, 11.954, 5000, {.maxSpeed = 65});
+   pros::delay(2500);
 
    //move to alliance-wall-side ring
-   chassis.moveToPoint(-48.596, 1, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(-44, 4, 5000, {.maxSpeed = 65});
+   pros::delay(2500);
 
    //move to neutral-wall-side ring
-   chassis.moveToPoint(-59,11.582, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(-58,11.582, 5000, {.maxSpeed = 65});
+   pros::delay(2500);
 
    //move away from corner
-   chassis.moveToPoint(-59, 27.943, 5000, {.maxSpeed = 65});
+   //chassis.moveToPoint(-55, 27.943, 5000, {.maxSpeed = 65});
+   //pros::delay(2500);
 
    //move into corner
    chassis.moveToPoint(-59.5, 1, 5000, {.forwards = false});
+   pros::delay(1500);
+   clamp.toggle();
+   intake.stop();
+   pros::delay(1000);
+   intake.autoRun(-1, 600);
+   chassis.moveToPoint(-59.5, 10, 5000);
 
+   chassis.moveToPose((36.5), 12, 270, 5000, {.forwards = false, .maxSpeed = 63, .earlyExitRange = 4});
+   //chassis.moveToPose((-59.5 + 96), 11, 90, 5000, {.forwards = false, .maxSpeed = 63});
+   pros::delay(3500);
+   clamp.toggle();
+   pros::delay(500);
+   intake.autoRun(1, 600);
+   chassis.moveToPoint(48.5, 5, 5000);
+   pros::delay(3500);
+   chassis.moveToPoint(64.5, -4, 5000, {.forwards = false});
+   pros::delay(2000);
+   intake.stop();
+   clamp.toggle();
 }
 
 
