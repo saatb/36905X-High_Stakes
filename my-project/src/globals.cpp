@@ -13,11 +13,13 @@ namespace Global{
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     //intake and conveyor motors
-    pros::Motor intakeMotor(-5, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
+    pros::Motor intakeMotor(-5, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
     pros::Motor conveyorMotor(20, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
+    pros::Motor liftMotor(14, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
 
-    //pneumatic (singular for now)
+    //pneumatics
     pros::adi::Pneumatics clampControl('A', false);
+    pros::adi::Pneumatics doinker('B', false);
 
     //imu
     pros::Imu imu(10);
@@ -61,7 +63,10 @@ namespace Global{
 
     lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);
 
+
+    //sensors
     pros::Optical optical(12);
     pros::Distance distance(18);
+    pros::adi::Potentiometer pot('D');
 }
 }

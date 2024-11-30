@@ -3,6 +3,7 @@
 #include "lemlib/api.hpp"
 #include "lemlib/chassis/chassis.hpp"
 #include "liblvgl/misc/lv_area.h"
+#include "pros/adi.hpp"
 #include "pros/distance.hpp"
 #include "pros/motors.hpp"
 #include "pros/optical.hpp"
@@ -20,6 +21,7 @@ namespace Global {
 
     extern pros::Motor intakeMotor;
     extern pros::Motor conveyorMotor;
+    extern pros::Motor liftMotor;
 
     extern pros::MotorGroup driveLeft;
     extern pros::MotorGroup driveRight;
@@ -35,8 +37,12 @@ namespace Global {
 
     extern lemlib::Chassis chassis;
 
+    //pneumatics
     extern pros::adi::Pneumatics clampControl;
+    extern pros::adi::Pneumatics doinker;
 
+    //sensors
     extern pros::Optical optical;
     extern pros::Distance distance;
+    extern pros::adi::Potentiometer pot;
 }}
