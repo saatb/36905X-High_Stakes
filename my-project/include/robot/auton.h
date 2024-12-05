@@ -3,6 +3,9 @@
 
 #include "robot/intake.h"
 #include "robot/clamp.h"
+#include "robot/doinker.h"
+#include "robot/lift.h"
+
 
 namespace Robot {
 
@@ -16,20 +19,20 @@ namespace Robot {
 
             static std::string allianceColor;
 
-            void autonMove(Intake &intake, Clamp &clamp);
+            void autonMove(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
 
             static void autonSwitcher(int autonNum);
 
         private:
-            void auton1(Intake &intake, Clamp &clamp);
+            void auton1(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
 
-            void auton2(Intake &intake, Clamp &clamp);
+            void auton2(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
             
-            void auton3(Intake &intake, Clamp &clamp);
+            void auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
             
-            void auton4(Intake &intake, Clamp &clamp);
+            void auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
             
-            void auton5(Intake &intake, Clamp &clamp);
+            void auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
     };
 
 }

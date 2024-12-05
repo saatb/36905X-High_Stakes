@@ -44,27 +44,25 @@ void Intake::stop(){
 }
 
 pros::Task colorSortingTask(
-    []{
-        std::string allianceColor = Robot::Autonomous::allianceColor;
+    [](){
         double redUpper = 40;
         double blueLower = 150;
-        double timer = 0;
         while (true) {
         
-	    while (true){
+        std::string allianceColor = Robot::Autonomous::allianceColor;
 		if ((optical.get_proximity() > 180)){ //check if there's an object close to the sensor
         	if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
             	((allianceColor == std::string("blue") && redUpper > optical.get_hue()))){
                 //if the object is of the opposite color, trigger the conveyor to stop
-                double startTime = pros::millis();
+                //double startTime = pros::millis();
                 //start a timer
-                while ((pros::millis() - startTime) < 300){
-                    conveyorMotor.move_velocity((-600));
-                pros::delay(10); //delay to save resources?
+                //while ((pros::millis() - startTime) < 300){
+                
+                pros::delay(100);
+                conveyorMotor.move_velocity((-600));
                 }
         }          
-        }
 		pros::delay(20); //save resources
         }
-    }}
+    }//}
 );

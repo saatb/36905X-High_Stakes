@@ -23,6 +23,8 @@
 #include "robot/auton.h"
 #include "robot/intake.h"
 #include "robot/clamp.h"
+#include "robot/doinker.h"
+#include "robot/lift.h"
 #include "screen/selector.h"
 
 LV_IMG_DECLARE(test1);
@@ -42,35 +44,13 @@ struct RobotSubsystems {
    Robot::Drivetrain drivetrain;
    Robot::Intake intake;
    Robot::Clamp clamp;
+   Robot::Doinker doinker;
+   Robot::Lift lift;
 } subsystem;
 
 struct RobotScreen{
 	Robot::autonSelectorScreen selector;
 } screen;
-
-void sort(){
-	pros::delay(30);
-    conveyorMotor.move_velocity((0));
-    pros::delay(70);
-    conveyorMotor.move_velocity((-600));
-    pros::delay(70);
-    conveyorMotor.move_velocity((0));
-}
-
-void colorSort(void* params){
-	std::string allianceColor = Autonomous::allianceColor;
-    double redUpper = 40;
-    double blueLower = 150;
-	while (true){
-		if ((optical.get_proximity() > 180)){ //check if there's an object close to the sensor
-        	if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
-            	((allianceColor == std::string("blue") && redUpper > optical.get_hue()))){
-                	sort(); //if the object is of the opposite color, trigger the state change
-        }           
-        }
-		pros::delay(50);
-}
-}
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -87,8 +67,10 @@ void initialize() {
 	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
+	subsystem.lift.init();
 	optical.disable_gesture();
-	optical.set_led_pwm(25);
+	optical.set_led_pwm(50);
+
 
 	//screen.selector.selector();
 	/*pros::Task screen_task([&](){
@@ -140,7 +122,7 @@ void autonomous() {
 	/*lv_obj_t *img = lv_img_create(lv_scr_act());
 	lv_img_set_src(img, &test1);
 	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
-	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp);
+	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp, subsystem.doinker, subsystem.lift);
 }
 
 
@@ -164,13 +146,13 @@ void opcontrol() {
 	/*lv_obj_t *img = lv_img_create(lv_scr_act());
 	lv_img_set_src(img, &test3);
 	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
-	//pros::Task::create(myTask, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "color sorting");
-	pros::Task colorSortTask(colorSort, NULL);
 	while (true){
 		subsystem.drivetrain.run();
 		subsystem.intake.run();
 		subsystem.clamp.run();
-		pros::delay(20);
+		subsystem.doinker.run();
+		subsystem.lift.run();
+		pros::delay(20); //save resources
 	}
 }
 

@@ -30,7 +30,7 @@ NOTES:
    - RED to BLUE transformation is inverting y-values (might also need to change headings)
 */
 
-void Autonomous::auton1(Intake &intake, Clamp &clamp){
+void Autonomous::auton1(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    controller.print(0, 0, "br, q: %d", quals);
     // autonomous 1 --> blueRight (single mogo)
     // CHANGED FROM redLeft by inverting y-values (neg to pos) and theta - 180
@@ -91,7 +91,7 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp){
     chassis.moveToPoint(78.95, 40.919, 5000, {.forwards = false});}
    }
 
-void Autonomous::auton2(Intake &intake, Clamp &clamp){
+void Autonomous::auton2(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    controller.print(0, 0, "rl, q: %d", quals);
    //DONE
    //autonomous 2 --> redLeft (single mogo)
@@ -154,7 +154,7 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp){
 
 }
 
-void Autonomous::auton3(Intake &intake, Clamp &clamp){
+void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    controller.print(0, 0, "rr, q: %d, gr: %d", quals, goalRush);
    //autonomous 3 redRight --> goal rush or safe two ring
    // safe two ring touches ladder in quals, moves near pos corner in elims
@@ -249,7 +249,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp){
    }
 }
 
-void Autonomous::auton4(Intake &intake, Clamp &clamp){
+void Autonomous::auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
 controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
 
    //TODO: make autonomous 4 blueLeft --> goal rush or safe two ring
@@ -345,7 +345,7 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
    }   
 }
 
-void Autonomous::auton5(Intake &intake, Clamp &clamp){
+void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    bool allianceStake = false;
    controller.print(0, 0, "skills");
    //autonomous 5 --> skills 
@@ -373,22 +373,22 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp){
 }
 
 
-void Autonomous::autonMove(Intake &intake, Clamp &clamp){
+void Autonomous::autonMove(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
     switch (Autonomous::auton) {
    case blueRight:
-      auton1(intake, clamp);
+      auton1(intake, clamp, doinker, lift);
       break;
    case redLeft:
-      auton2(intake, clamp);
+      auton2(intake, clamp, doinker, lift);
       break;
    case redRight:
-      auton3(intake, clamp);
+      auton3(intake, clamp, doinker, lift);
       break;
    case blueLeft:
-      auton4(intake, clamp);
+      auton4(intake, clamp, doinker, lift);
       break;
    case skills:
-      auton5(intake, clamp);
+      auton5(intake, clamp, doinker, lift);
       break;
    }
 }
