@@ -59,18 +59,20 @@ struct RobotScreen{
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	if (pros::c::get_plugged_type(10) == pros::c::E_DEVICE_IMU) {
-      chassis.calibrate();
-   }
+	//calibrate chassis
+    chassis.calibrate();
 
+	//zero chassis pose
 	chassis.setPose(0,0,0);
+
+	//set drive motors to brake
 	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-	subsystem.lift.init();
+	subsystem.lift.init();//init lift
+	//config optical sensor
 	optical.disable_gesture();
 	optical.set_led_pwm(50);
-
 
 	//screen.selector.selector();
 	/*pros::Task screen_task([&](){

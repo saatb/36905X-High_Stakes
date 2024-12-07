@@ -1,6 +1,7 @@
 #include "pros/abstract_motor.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
+#include "pros/rotation.h"
 #include "robot/intake.h"
 #include <cassert>
 #include <cstddef>
@@ -34,6 +35,7 @@ void Lift::init() {
     liftMotor.move_relative(-10, 100);
     pros::delay(500);
     liftMotor.tare_position();
+    pot.calibrate();
 }
 
 
@@ -61,7 +63,7 @@ void Lift::setPosition(int newIndex){
 pros::Task liftTask(
     [](){
         while (true){
-            double out = liftPID.update(positions[liftIndex] - pot.get_angle() / 100.0);
+            double out = liftPID.update(positions[liftIndex] - pot.get_angle());
             liftMotor.move_voltage(out * 100);
             pros::delay(10); //save resources
         }
