@@ -19,20 +19,20 @@ Lift::Lift() {
 
 std::vector<double> positions = {
     0,    // Empty
-    20,   // Loading 1
-    145,  // Wallstake
+    20,   // 335 Loading 1
+    160,  // 250 Wallstake
     200   // Down / Wallstake
 
 };
 
 size_t liftIndex(0);
 
-lemlib::PID liftPID(5, 0, 0);
+lemlib::PID liftPID(1, 0, 0);
 
 void Lift::init() {
     liftMotor.set_brake_mode(pros::MotorBrake::hold);
     liftMotor.set_encoder_units(pros::MotorUnits::degrees);
-    liftMotor.move_relative(-10, 100);
+    liftMotor.move_relative(-10, 200);
     pros::delay(500);
     liftMotor.tare_position();
     pot.calibrate();
@@ -41,15 +41,15 @@ void Lift::init() {
 
 void Lift::run() {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
-        liftIndex++; //increase index by 1
+        liftIndex = liftIndex + 1; //increase index by 1
         liftIndex = std::min(liftIndex, size_t(positions.size() - 1)); //keep w/in bounds
-        liftMotor.move_absolute(positions[liftIndex], 100); //move arm
+        liftMotor.move_absolute(positions[liftIndex], 200); //move arm
 
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
-        liftIndex--; //decrease index by 1
+        liftIndex = liftIndex - 1; //decrease index by 1
         liftIndex = std::max(liftIndex, size_t(0)); //keep w/in bounds
-        liftMotor.move_absolute(positions[liftIndex], 100); //move arm
+        liftMotor.move_absolute(positions[liftIndex], 200); //move arm
     }
 }
 
@@ -63,9 +63,11 @@ void Lift::setPosition(int newIndex){
 pros::Task liftTask(
     [](){
         while (true){
-            double out = liftPID.update(positions[liftIndex] - pot.get_angle());
+            double out = liftPID.update( (positions[liftIndex] - (((pot.get_value_calibrated() + 15.0) / 4095.0) * 360.0)));
             liftMotor.move_voltage(out * 100);
+            controller.print(0, 0, "%f", ((pot.get_value_calibrated() / 4095.0) * 360.0));
             pros::delay(10); //save resources
+        
         }
     }
 );
