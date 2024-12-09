@@ -58,8 +58,8 @@ pros::Task colorSortingTask(
                 //start a timer
                 //while ((pros::millis() - startTime) < 300){
                 
-                pros::delay(100);
-                conveyorMotor.move_velocity((-600));
+                conveyorMotor.move_velocity((0));
+                controller.print(1, 1, "ring detected!");
                 }
         }          
 		pros::delay(20); //save resources

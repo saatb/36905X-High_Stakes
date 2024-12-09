@@ -19,9 +19,9 @@ Lift::Lift() {
 
 std::vector<double> positions = {
     0,    // Empty
-    20,   // 335 Loading 1
-    160,  // 250 Wallstake
-    200   // Down / Wallstake
+    120,   // Loading
+    580,  // Wallstake
+    640   // Down / Wallstake
 
 };
 
@@ -35,7 +35,6 @@ void Lift::init() {
     liftMotor.move_relative(-10, 200);
     pros::delay(500);
     liftMotor.tare_position();
-    pot.calibrate();
 }
 
 
@@ -46,10 +45,10 @@ void Lift::run() {
         liftMotor.move_absolute(positions[liftIndex], 200); //move arm
 
     }
-    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)){
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
         liftIndex = liftIndex - 1; //decrease index by 1
         liftIndex = std::max(liftIndex, size_t(0)); //keep w/in bounds
-        liftMotor.move_absolute(positions[liftIndex], 200); //move arm
+        liftMotor.move_absolute(positions[liftIndex], -200); //move arm
     }
 }
 
@@ -59,16 +58,18 @@ void Lift::setPosition(int newIndex){
 }
 
 
-
+/*
 pros::Task liftTask(
     [](){
         while (true){
-            double out = liftPID.update( (positions[liftIndex] - (((pot.get_value_calibrated() + 15.0) / 4095.0) * 360.0)));
+            double out = liftPID.update( ((((pot.get_value_calibrated()) / 4095.0) * 360.0)
+             - positions[liftIndex]));
             liftMotor.move_voltage(out * 100);
-            controller.print(0, 0, "%f", ((pot.get_value_calibrated() / 4095.0) * 360.0));
+            controller.print(0, 0, "%f, %f", ((pot.get_value_calibrated() / 4095.0) * 333.0)
+            , liftMotor.get_position());
             pros::delay(10); //save resources
         
         }
     }
 );
-
+*/

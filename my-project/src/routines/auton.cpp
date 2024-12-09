@@ -17,7 +17,7 @@ using namespace lemlib;
 
 Autonomous::routine Autonomous::auton = redLeft;
 std::string				  Autonomous::autonName;
-std::string Autonomous::allianceColor;
+std::string Autonomous::allianceColor = "red";
 
 bool quals = true;
 bool goalRush = false;

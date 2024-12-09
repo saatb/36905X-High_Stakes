@@ -22,7 +22,7 @@ namespace Global{
     pros::adi::Pneumatics doinker('G', false);
 
     //imu
-    pros::Imu imu(88);
+    pros::Imu imu(14);
 
     //drive motor groups
     pros::MotorGroup driveRight({1,2,3}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
@@ -65,8 +65,8 @@ namespace Global{
 
 
     //sensors
-    pros::Optical optical(12);
-    pros::Distance distance(18);
+    pros::Optical optical(13);
+    //pros::Distance distance(18);
     pros::adi::Potentiometer pot('D');
 }
 }

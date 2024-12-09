@@ -70,7 +70,6 @@ void initialize() {
 	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 	subsystem.lift.init();//init lift
-	pot.calibrate();
 	//config optical sensor
 	optical.disable_gesture();
 	optical.set_led_pwm(50);
