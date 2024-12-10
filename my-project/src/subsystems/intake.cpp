@@ -43,6 +43,12 @@ void Intake::stop(){
     conveyorMotor.move_velocity((0));
 }
 
+void Intake::wallstake(){
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+        conveyorMotor.move_relative(-20, -600);
+    }
+}
+
 pros::Task colorSortingTask(
     [](){
         double redUpper = 40;
@@ -60,6 +66,7 @@ pros::Task colorSortingTask(
                 
                 conveyorMotor.move_velocity((0));
                 controller.print(1, 1, "ring detected!");
+                pros::delay(150);
                 }
         }          
 		pros::delay(20); //save resources

@@ -19,9 +19,10 @@ Lift::Lift() {
 
 std::vector<double> positions = {
     0,    // Empty
-    120,   // Loading
-    580,  // Wallstake
-    640   // Down / Wallstake
+    100,   // Loading
+    360,  //up, not score (rest)
+    580,   // bring to wall stake
+    640     //down on wall stake
 
 };
 
@@ -56,7 +57,6 @@ void Lift::setPosition(int newIndex){
     //update lift position/index
    liftIndex = newIndex;
 }
-
 
 /*
 pros::Task liftTask(
