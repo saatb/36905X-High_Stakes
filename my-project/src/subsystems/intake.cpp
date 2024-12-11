@@ -43,12 +43,6 @@ void Intake::stop(){
     conveyorMotor.move_velocity((0));
 }
 
-void Intake::wallstake(){
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-        conveyorMotor.move_relative(-20, -600);
-    }
-}
-
 pros::Task colorSortingTask(
     [](){
         double redUpper = 40;
