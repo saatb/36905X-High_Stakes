@@ -20,7 +20,7 @@ Lift::Lift() {
 std::vector<double> positions = {
     0,    // Empty
     100,   // Loading,  //up, not score (rest)
-    500,   // bring to wall stake    //down on wall stake
+    490,   // bring to wall stake    //down on wall stake
 
 };
 
@@ -49,11 +49,29 @@ void Lift::run() {
         liftIndex = std::max(liftIndex, size_t(0)); //keep w/in bounds
         liftMotor.move_absolute(positions[liftIndex], -200); //move arm
     }
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+        //zero the lift manually
+        liftMotor.move_relative(-10, 200);
+        pros::delay(500);
+        liftMotor.tare_position();
+    }
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+        //manual control of lady brown
+        liftMotor.move_velocity(200);
+    }
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
+        //manual control of lady brown
+        liftMotor.move_velocity(-200);
+    }
 }
 
 void Lift::setPosition(int newIndex){
     //update lift position/index
    liftIndex = newIndex;
+}
+
+void Lift::autoRun(int position){
+    liftMotor.move_absolute(positions[position], 200); //move arm
 }
 
 /*

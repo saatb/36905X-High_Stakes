@@ -71,8 +71,6 @@ void initialize() {
 
 	subsystem.lift.init();//init lift
 	//config optical sensor
-	optical.disable_gesture();
-	optical.set_led_pwm(50);
 
 	//screen.selector.selector();
 	/*pros::Task screen_task([&](){

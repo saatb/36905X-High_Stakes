@@ -8,6 +8,7 @@ namespace Robot {
         void run();
         void autoRun(int direction, int intakeSpeed = 200, int conveyorSpeed = 600);
         void stop();
-        void wallstake();
+        void enableAutoSort();
+        void disableAutoSort();
     };
 }

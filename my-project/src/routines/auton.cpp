@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = redLeft;
+Autonomous::routine Autonomous::auton = redRight;
 std::string				  Autonomous::autonName;
 std::string Autonomous::allianceColor = "red";
 
@@ -40,9 +40,9 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     //then touches ladder with intake
 
     //release first stage
-    intake.autoRun(-1, 600);
-    pros::delay(150);
-    intake.stop();
+    //intake.autoRun(-1, 600);
+    //pros::delay(150);
+    //intake.stop();
 
     //set pose
     chassis.setPose(22.946, 60.144, 0 );
@@ -101,9 +101,9 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     //then touches ladder with intake
 
     //release first stage
-    intake.autoRun(-1, 600);
-    pros::delay(150);
-    intake.stop();
+    //intake.autoRun(-1, 600);
+    //pros::delay(150);
+    //intake.stop();
 
     //set pose
     chassis.setPose(22.946, -60.144, 180 );
@@ -160,14 +160,24 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    // safe two ring touches ladder in quals, moves near pos corner in elims
 
    //release first stage
-   intake.autoRun(-1, 600);
-   pros::delay(150);
-   intake.stop();
+   //intake.autoRun(-1, 600);
+   //pros::delay(150);
+   //intake.stop();
 
    if (goalRush == false){
     //set pose
-    chassis.setPose(-22.946, -60.144, 180 );
+    chassis.setPose(-34.946, -54.144, 225);
+    chassis.moveToPoint(-39.946, -60, 5000);
+    
+    lift.autoRun(2);
 
+    chassis.moveToPoint(-30, -50, 1500, {.forwards = false});
+    chassis.moveToPose(-55, -45, 270, 5000);   
+    while (optical.get_hue() > 40.0) {
+      intake.autoRun(1, 600); 
+    }
+    intake.stop();
+    
     //move to mogo, motion chained
     chassis.moveToPoint(-22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
     chassis.moveToPoint(-22.946, -32.919, 5000, {.forwards = false, .maxSpeed = 63});
@@ -257,9 +267,9 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
    //CHANGED from redRight by inverting y-values (neg to pos) and theta - 180 for commands
 
    //release first stage
-   intake.autoRun(-1, 600);
-   pros::delay(150);
-   intake.stop();
+   //intake.autoRun(-1, 600);
+   //pros::delay(150);
+   //intake.stop();
 
    if (goalRush == false){
     //set pose
@@ -351,9 +361,9 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    //autonomous 5 --> skills 
    // starts right against alliance stake
    //release first stage
-   intake.autoRun(-1, 600);
-   pros::delay(150);
-   intake.stop();
+   //intake.autoRun(-1, 600);
+   //pros::delay(150);
+   //intake.stop();
 
    chassis.setPose(0, 0, 0);
    intake.autoRun(1, 600);
