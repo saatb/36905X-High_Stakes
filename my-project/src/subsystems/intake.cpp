@@ -26,6 +26,14 @@ void Intake::run() {
         intakeMotor.move_velocity(-600);
         conveyorMotor.move_velocity(-600);
     }
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+        if (autoSortEnabled){
+            disableAutoSort();
+        }
+        else {
+            enableAutoSort();
+        }
+    }
     else{
         //die.
         intakeMotor.move_velocity(0);
