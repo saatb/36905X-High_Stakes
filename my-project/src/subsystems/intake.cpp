@@ -15,6 +15,16 @@ Intake::Intake() {
 
 bool autoSortEnabled(0);
 
+void enableAutoSort()
+{
+          // Enable auto sort
+}
+
+void disableAutoSort()
+{
+         // Disable auto sort
+}
+
 void Intake::run() {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
         //spin motors at full speed ^-^
@@ -28,10 +38,12 @@ void Intake::run() {
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
         if (autoSortEnabled){
-            disableAutoSort();
+            optical.set_led_pwm(0);
+            autoSortEnabled = false;
         }
         else {
-            enableAutoSort();
+            optical.set_led_pwm(50);  // Increase light
+            autoSortEnabled = true;  
         }
     }
     else{
@@ -51,18 +63,6 @@ void Intake::stop(){
     //die.
     intakeMotor.move_velocity((0));
     conveyorMotor.move_velocity((0));
-}
-
-void enableAutoSort()
-{
-  optical.set_led_pwm(50);  // Increase light
-  autoSortEnabled = true;          // Enable auto sort
-}
-
-void disableAutoSort()
-{
-  optical.set_led_pwm(0);  // Turn off light
-  autoSortEnabled = false;       // Disable auto sort
 }
 
 pros::Task colorSortingTask(

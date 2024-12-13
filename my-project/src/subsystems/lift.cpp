@@ -19,8 +19,9 @@ Lift::Lift() {
 
 std::vector<double> positions = {
     0,    // Empty
-    100,   // Loading,  //up, not score (rest)
-    490,   // bring to wall stake    //down on wall stake
+    120,   // Loading,  
+    270,//up, not score (rest)
+    510  // bring to wall stake
 
 };
 
@@ -57,11 +58,11 @@ void Lift::run() {
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
         //manual control of lady brown
-        liftMotor.move_velocity(200);
+        liftMotor.move_velocity(20);
     }
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
         //manual control of lady brown
-        liftMotor.move_velocity(-200);
+        liftMotor.move_velocity(-20);
     }
 }
 
