@@ -145,7 +145,7 @@ void Autonomous::auton2(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     chassis.moveToPoint(-8.296, -24.919, 5000, {.forwards = false});
 
     //move to second stack
-    chassis.moveToPose(0.296, -11.919, 5, 3500);
+    chassis.moveToPose(0.296, -12.5, 5, 3500);
 
     //back up after scoring
     chassis.moveToPoint(3.296, -24.919, 5000, {.forwards = false});
@@ -182,8 +182,9 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     lift.autoRun(3);
 
     chassis.moveToPoint(-30, -50, 1500, {.forwards = false});
-    chassis.moveToPose(-60, -44.8, 270, 5000);   
-    while (optical.get_hue() > 40.0) {
+    chassis.moveToPose(-60, -44.8, 270, 5000);  
+    double now = pros::millis(); 
+    while (optical.get_hue() > 40.0 && (pros::millis() - now) > 5000) {
       intake.autoRun(1, 600); 
     }
     intake.stop();
@@ -292,8 +293,9 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
     lift.autoRun(3);
 
     chassis.moveToPoint(-30, 50, 1500, {.forwards = false});
-    chassis.moveToPose(-60, 44.8, 180 - 270, 5000);   
-    while (optical.get_hue() < 150) {
+    chassis.moveToPose(-60, 44.8, 180 - 270, 5000);
+    double now = pros::millis();   
+    while (optical.get_hue() < 150 && (pros::millis() - now) > 5000) {
       intake.autoRun(1, 600); 
     }
     intake.stop();
@@ -401,15 +403,19 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    clamp.toggle();
    pros::delay(500);
    intake.autoRun(1, 600);
-   pros::delay(3000);
+   pros::delay(1500);
+   lift.autoRun(0);
 
    //move to nearest ring
-   chassis.moveToPoint(-23.497, 34.635, 5000, {.maxSpeed = 65});
-   pros::delay(3000);
+   chassis.moveToPoint(-22.497, 34.635, 5000, {.maxSpeed = 65});
+   pros::delay(1500);
 
    //move to ring on centerline
-   chassis.moveToPoint(-56, 59.176, 5000, {.maxSpeed = 65}); 
-   pros::delay(3000);
+   chassis.moveToPoint(-55, 59.176, 5000, {.maxSpeed = 65}); 
+   pros::delay(1500);
+
+   //back up
+   chassis.moveToPoint(-50, 55.176, 5000, {.forwards = false, .maxSpeed = 65}); 
 
    //move to third ring
    chassis.moveToPoint(-48.782, 35.937, 5000, {.maxSpeed = 65});

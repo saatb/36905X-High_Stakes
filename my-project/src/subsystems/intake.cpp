@@ -14,6 +14,7 @@ Intake::Intake() {
 }
 
 bool autoSortEnabled(0);
+bool antiStallEnabled(0);
 
 void enableAutoSort()
 {
@@ -91,3 +92,27 @@ pros::Task colorSortingTask(
     }
     }
 );
+
+/*
+pros::Task antiStallTask(
+    [](){
+        
+        while (true) {
+            if (antiStallEnabled){ //only run code if anti stall is enabled
+                double goal = conveyorMotor.get_target_velocity();
+                double actual = conveyorMotor.get_actual_velocity();
+        	if ((actual < 100 && goal == -600) || //check if the actual velocity of the conveyor is close to 0, only if conveyor should be running
+            	(actual < 100 && goal == 600)) {
+                controller.print(1, 1, "stall!");
+                conveyorMotor.move_velocity(goal * -1);
+                pros::delay(150);
+                conveyorMotor.move_velocity(goal);
+                }
+            else {
+                controller.clear_line(1);
+            }
+        }          
+		pros::delay(20); //save resources
+        }
+    }
+);*/
