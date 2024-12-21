@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = skills;
+Autonomous::routine Autonomous::auton = redLeft;
 std::string				  Autonomous::autonName;
 std::string Autonomous::allianceColor = "red";
 
@@ -177,14 +177,15 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    if (goalRush == false){
     //set pose
     chassis.setPose(-34.946, -54.144, 225);
-    chassis.moveToPoint(-39.946, -60, 5000);
+    chassis.moveToPoint(-39.946, -59.3, 5000);
     
     lift.autoRun(3);
 
     chassis.moveToPoint(-30, -50, 1500, {.forwards = false});
     chassis.moveToPose(-60, -44.8, 270, 5000);  
-    double now = pros::millis(); 
-    while (optical.get_hue() > 40.0 && (pros::millis() - now) > 5000) {
+    lift.autoRun(0);
+    //double now = pros::millis(); 
+    while (optical.get_hue() > 40.0 /*&& (pros::millis() - now) > 5000*/) {
       intake.autoRun(1, 600); 
     }
     intake.stop();
@@ -192,8 +193,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     //move to mogo, motion chained
     //chassis.moveToPoint(-30.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
     //chassis.moveToPose(-22.946, -25.919, 270, 5000, {.forwards = false, .maxSpeed = 80});
-    chassis.moveToPose(-16.946, -25.919, 225, 5000, {.forwards = false, .maxSpeed = 80});
-    lift.autoRun(0);
+    chassis.moveToPose(-15.946, -23.919, 225, 5000, {.forwards = false, .maxSpeed = 80});
     pros::delay(3000);
 
     //clamp mogo
@@ -205,7 +205,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     pros::delay(1000);
 
     //move to single stack adjacent to mogo 
-    chassis.moveToPoint(-3.296, -28.919,5000); // x-coord from jerry was 38.596
+    chassis.moveToPoint(-1.296, -26.5,5000); // x-coord from jerry was 38.596
 
     //allow time to score
     pros::delay(2500);
@@ -220,7 +220,7 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
       //clamp.toggle();
 
       //go and touch ladder
-      chassis.moveToPoint(-37, -28.19, 5000);
+      chassis.moveToPoint(-37, -22.19, 5000);
     }
     else {
     //move to pos corner
@@ -288,14 +288,15 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
    if (goalRush == false){
     //set pose
     chassis.setPose(-34.946, 54.144, 180 - 225);
-    chassis.moveToPoint(-39.946, 60, 5000);
+    chassis.moveToPoint(-39.946, 61, 5000);
     
     lift.autoRun(3);
 
     chassis.moveToPoint(-30, 50, 1500, {.forwards = false});
     chassis.moveToPose(-60, 44.8, 180 - 270, 5000);
-    double now = pros::millis();   
-    while (optical.get_hue() < 150 && (pros::millis() - now) > 5000) {
+    lift.autoRun(0);
+    //double now = pros::millis();   
+    while (optical.get_hue() < 150 /*& (pros::millis() - now) > 5000*/) {
       intake.autoRun(1, 600); 
     }
     intake.stop();
@@ -303,8 +304,8 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
     //move to mogo, motion chained
     //chassis.moveToPoint(-30.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
     //chassis.moveToPose(-22.946, -25.919, 270, 5000, {.forwards = false, .maxSpeed = 80});
-    chassis.moveToPose(-16.946, 25.919, 180 - 225, 5000, {.forwards = false, .maxSpeed = 80});
-    lift.autoRun(0);
+    chassis.moveToPose(-17.946, 23.919, 180 - 225, 5000, {.forwards = false, .maxSpeed = 80});
+    
     pros::delay(3000);
 
     //clamp mogo
@@ -316,7 +317,7 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
     pros::delay(1000);
 
     //move to single stack adjacent to mogo 
-    chassis.moveToPoint(-3.296, 28.919,5000); // x-coord from jerry was 38.596
+    chassis.moveToPoint(-3.296, 27,5000); // x-coord from jerry was 38.596
 
     //allow time to score
     pros::delay(2500);
@@ -331,7 +332,7 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
       //clamp.toggle();
 
       //go and touch ladder
-      chassis.moveToPoint(-37, 23.19, 5000, {.maxSpeed = 63});
+      chassis.moveToPoint(-38, 21.19, 5000, {.maxSpeed = 63});
     }
     else {
     //move to pos corner
@@ -394,7 +395,7 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    //pros::delay(300);
    //intake.stop();
 
-   chassis.setPose(12, 0, 180);
+   chassis.setPose(12, 2, 180);
    lift.autoRun(3);
    pros::delay(1000);
    chassis.moveToPoint(12, 5, 5000, {.forwards = false});
@@ -407,7 +408,7 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    lift.autoRun(0);
 
    //move to nearest ring
-   chassis.moveToPoint(-22.497, 34.635, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(-24.497, 34.635, 5000, {.maxSpeed = 65});
    pros::delay(1500);
 
    //move to ring on centerline

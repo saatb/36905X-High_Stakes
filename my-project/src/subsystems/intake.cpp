@@ -14,7 +14,7 @@ Intake::Intake() {
 }
 
 bool autoSortEnabled(0);
-bool antiStallEnabled(0);
+bool antiStallEnabled(1);
 
 void enableAutoSort()
 {
@@ -65,7 +65,7 @@ void Intake::stop(){
     intakeMotor.move_velocity((0));
     conveyorMotor.move_velocity((0));
 }
-
+/*
 pros::Task colorSortingTask(
     [](){
         double redUpper = 40;
@@ -81,10 +81,13 @@ pros::Task colorSortingTask(
                 //double startTime = pros::millis();
                 //start a timer
                 //while ((pros::millis() - startTime) < 300){
-                
+                controller.print(1, 1, "ring detected!");
                 pros::delay(150);
                 conveyorMotor.move_velocity((0));
-                controller.print(1, 1, "ring detected!");
+                pros::delay(150);
+                conveyorMotor.move_velocity((-600));
+                pros::delay(150);
+                conveyorMotor.move_velocity((0));
                 }
         }          
 		pros::delay(20); //save resources
@@ -92,8 +95,7 @@ pros::Task colorSortingTask(
     }
     }
 );
-
-/*
+*/
 pros::Task antiStallTask(
     [](){
         
@@ -101,12 +103,11 @@ pros::Task antiStallTask(
             if (antiStallEnabled){ //only run code if anti stall is enabled
                 double goal = conveyorMotor.get_target_velocity();
                 double actual = conveyorMotor.get_actual_velocity();
-        	if ((actual < 100 && goal == -600) || //check if the actual velocity of the conveyor is close to 0, only if conveyor should be running
+        	if ((actual > -100 && goal == -600) || //check if the actual velocity of the conveyor is close to 0, only if conveyor should be running
             	(actual < 100 && goal == 600)) {
                 controller.print(1, 1, "stall!");
                 conveyorMotor.move_velocity(goal * -1);
                 pros::delay(150);
-                conveyorMotor.move_velocity(goal);
                 }
             else {
                 controller.clear_line(1);
@@ -115,4 +116,4 @@ pros::Task antiStallTask(
 		pros::delay(20); //save resources
         }
     }
-);*/
+);

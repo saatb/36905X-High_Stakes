@@ -16,6 +16,7 @@
 #include "globals.h"
 #include "pros/apix.h"
 #include "pros/motors.h"
+#include "pros/optical.hpp"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "pros/screen.h"
@@ -26,15 +27,6 @@
 #include "robot/doinker.h"
 #include "robot/lift.h"
 #include "screen/selector.h"
-
-LV_IMG_DECLARE(test1);
-LV_IMG_DECLARE(test2);
-LV_IMG_DECLARE(test3);
-LV_IMG_DECLARE(test4);
-LV_IMG_DECLARE(test5);
-LV_IMG_DECLARE(test6);
-LV_IMG_DECLARE(test7);
-LV_IMG_DECLARE(test8);
 
 using namespace Robot;
 using namespace Robot::Global;
@@ -62,6 +54,8 @@ void initialize() {
 	//calibrate chassis
     chassis.calibrate();
 
+	screen.selector.selector();
+
 	//zero chassis pose
 	chassis.setPose(0,0,0);
 
@@ -72,7 +66,7 @@ void initialize() {
 	subsystem.lift.init();//init lift
 	//config optical sensor
 
-	//screen.selector.selector();
+	
 	/*pros::Task screen_task([&](){
 		while (true){
 			pros::lcd::print(0, "X: %f", chassis.getPose().x);
@@ -92,6 +86,7 @@ void disabled() {
 	/*lv_obj_t *img = lv_img_create(lv_scr_act());
 	lv_img_set_src(img, &test2);
 	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
+	screen.selector.selector();
 }
 
 /**

@@ -15,7 +15,7 @@ namespace Global{
     //intake and conveyor motors
     pros::Motor intakeMotor(-4, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
     pros::Motor conveyorMotor(20, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
-    pros::Motor liftMotor(19, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
+    pros::Motor liftMotor(-19, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
 
     //pneumatics
     pros::adi::Pneumatics clampControl('H', false);

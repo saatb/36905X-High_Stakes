@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "36905X High Stakes OPTICAL",
+    "project_name": "redLeft",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -299,8 +299,8 @@
     },
     "upload_options": {
       "icon": "pros",
-      "description": "Testing Optical Sensor",
-      "slot": 3
+      "description": "redLeft",
+      "slot": 2
     },
     "use_early_access": false
   }

@@ -20,8 +20,8 @@ Lift::Lift() {
 std::vector<double> positions = {
     0,    // Empty
     120,   // Loading,  
-    270,//up, not score (rest)
-    510  // bring to wall stake
+    300,//up, not score (rest)
+    570  // bring to wall stake
 
 };
 
