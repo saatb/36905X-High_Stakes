@@ -13,7 +13,7 @@ using namespace Robot::Global;
 Intake::Intake() {
 }
 
-bool autoSortEnabled(0);
+bool autoSortEnabled(1);
 bool antiStallEnabled(1);
 
 void enableAutoSort()
@@ -43,7 +43,7 @@ void Intake::run() {
             autoSortEnabled = false;
         }
         else {
-            optical.set_led_pwm(50);  // Increase light
+            optical.set_led_pwm(100);  // Increase light
             autoSortEnabled = true;  
         }
     }
@@ -65,37 +65,47 @@ void Intake::stop(){
     intakeMotor.move_velocity((0));
     conveyorMotor.move_velocity((0));
 }
-/*
+
+void sort()
+{
+controller.print(1, 1, "ring detected!");
+pros::delay(150);
+conveyorMotor.move_velocity((0));
+pros::delay(150);
+conveyorMotor.move_velocity((-600));
+pros::delay(150);
+conveyorMotor.move_velocity((0));
+}
+
+void antiStall(int goal)
+{
+controller.print(1, 1, "stall!");
+conveyorMotor.move_velocity(goal * -1);
+pros::delay(150);
+}
+
 pros::Task colorSortingTask(
     [](){
-        double redUpper = 40;
-        double blueLower = 150;
+        double redUpper = 25;
+        double blueLower = 140;
         while (true) {
             if (autoSortEnabled){
         
         std::string allianceColor = Robot::Autonomous::allianceColor;
-		if ((optical.get_proximity() > 180)){ //check if there's an object close to the sensor
         	if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
             	((allianceColor == std::string("blue") && redUpper > optical.get_hue()))){
                 //if the object is of the opposite color, trigger the conveyor to stop
                 //double startTime = pros::millis();
                 //start a timer
                 //while ((pros::millis() - startTime) < 300){
-                controller.print(1, 1, "ring detected!");
-                pros::delay(150);
-                conveyorMotor.move_velocity((0));
-                pros::delay(150);
-                conveyorMotor.move_velocity((-600));
-                pros::delay(150);
-                conveyorMotor.move_velocity((0));
+                sort();
                 }
         }          
 		pros::delay(20); //save resources
         }
     }
-    }
 );
-*/
+
 pros::Task antiStallTask(
     [](){
         
@@ -105,9 +115,7 @@ pros::Task antiStallTask(
                 double actual = conveyorMotor.get_actual_velocity();
         	if ((actual > -100 && goal == -600) || //check if the actual velocity of the conveyor is close to 0, only if conveyor should be running
             	(actual < 100 && goal == 600)) {
-                controller.print(1, 1, "stall!");
-                conveyorMotor.move_velocity(goal * -1);
-                pros::delay(150);
+                antiStall(goal);
                 }
             else {
                 controller.clear_line(1);

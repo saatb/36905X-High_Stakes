@@ -6,6 +6,7 @@
 #include "pros/misc.h"
 #include "pros/misc.hpp"
 #include "pros/optical.hpp"
+#include "pros/rotation.hpp"
 
 namespace Robot{
 namespace Global{
@@ -13,9 +14,9 @@ namespace Global{
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     //intake and conveyor motors
-    pros::Motor intakeMotor(-4, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
+    pros::Motor intakeMotor(-2, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
     pros::Motor conveyorMotor(20, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
-    pros::Motor liftMotor(-19, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
+    pros::Motor liftMotor(-13, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
 
     //pneumatics
     pros::adi::Pneumatics clampControl('H', false);
@@ -25,8 +26,8 @@ namespace Global{
     pros::Imu imu(14);
 
     //drive motor groups
-    pros::MotorGroup driveRight({1,2,3}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
-    pros::MotorGroup driveLeft({-5,-6,-7}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
+    pros::MotorGroup driveRight({1,6,7}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
+    pros::MotorGroup driveLeft({-3,-4,-5}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
 
     //make drivetrain
     lemlib::Drivetrain drivetrain(&driveLeft, &driveRight, 
@@ -65,8 +66,9 @@ namespace Global{
 
 
     //sensors
-    pros::Optical optical(13);
+    pros::Optical optical(12);
     //pros::Distance distance(18);
     pros::adi::Potentiometer pot('D');
+    pros::Rotation rotation(17);
 }
 }

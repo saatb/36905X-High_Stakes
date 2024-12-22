@@ -21,7 +21,7 @@ std::vector<double> positions = {
     0,    // Empty
     120,   // Loading,  
     300,//up, not score (rest)
-    570  // bring to wall stake
+    580  // bring to wall stake
 
 };
 
@@ -64,6 +64,10 @@ void Lift::run() {
         //manual control of lady brown
         liftMotor.move_velocity(-20);
     }
+    else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
+        //manual control of lady brown
+        liftMotor.move_velocity(0);
+    }
 }
 
 void Lift::setPosition(int newIndex){
@@ -79,11 +83,9 @@ void Lift::autoRun(int position){
 pros::Task liftTask(
     [](){
         while (true){
-            double out = liftPID.update( ((((pot.get_value_calibrated()) / 4095.0) * 360.0)
-             - positions[liftIndex]));
+            double out = liftPID.update(positions[liftIndex] - rotation.get_position() / 100.0);
             liftMotor.move_voltage(out * 100);
-            controller.print(0, 0, "%f, %f", ((pot.get_value_calibrated() / 4095.0) * 333.0)
-            , liftMotor.get_position());
+            controller.print(0, 0, "%f, %f", rotation.get_position(), liftMotor.get_position());
             pros::delay(10); //save resources
         
         }

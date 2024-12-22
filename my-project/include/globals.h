@@ -7,6 +7,7 @@
 #include "pros/distance.hpp"
 #include "pros/motors.hpp"
 #include "pros/optical.hpp"
+#include "pros/rotation.hpp"
 
 namespace Robot{
 
@@ -45,4 +46,5 @@ namespace Global {
     extern pros::Optical optical;
     extern pros::Distance distance;
     extern pros::adi::Potentiometer pot;
+    extern pros::Rotation rotation;
 }}
