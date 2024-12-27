@@ -9,7 +9,7 @@ namespace Robot {
         void init();
         void run();
         void setPosition(int newIndex);
-        void autoRun(int position);
+        //void autoRun(int position);
 
         private:
         

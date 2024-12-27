@@ -179,11 +179,11 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     chassis.setPose(-34.946, -54.144, 225);
     chassis.moveToPoint(-39.946, -59.3, 5000);
     
-    lift.autoRun(3);
+    lift.setPosition(3);
 
     chassis.moveToPoint(-30, -50, 1500, {.forwards = false});
     chassis.moveToPose(-60, -44.8, 270, 5000);  
-    lift.autoRun(0);
+    lift.setPosition(0);
     //double now = pros::millis(); 
     while (optical.get_hue() > 40.0 /*&& (pros::millis() - now) > 5000*/) {
       intake.autoRun(1, 600); 
@@ -290,11 +290,11 @@ controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
     chassis.setPose(-34.946, 54.144, 180 - 225);
     chassis.moveToPoint(-39.946, 61, 5000);
     
-    lift.autoRun(3);
+    lift.setPosition(3);
 
     chassis.moveToPoint(-30, 50, 1500, {.forwards = false});
     chassis.moveToPose(-60, 44.8, 180 - 270, 5000);
-    lift.autoRun(0);
+    lift.setPosition(0);
     //double now = pros::millis();   
     while (optical.get_hue() < 150 /*& (pros::millis() - now) > 5000*/) {
       intake.autoRun(1, 600); 
@@ -396,7 +396,7 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    //intake.stop();
 
    chassis.setPose(12, 2, 180);
-   lift.autoRun(3);
+   lift.setPosition(3);
    pros::delay(1000);
    chassis.moveToPoint(12, 5, 5000, {.forwards = false});
    chassis.moveToPose(-22.579, 12.3, 90, 5000, {.forwards = false, .minSpeed = 25});
@@ -405,7 +405,7 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    pros::delay(500);
    intake.autoRun(1, 600);
    pros::delay(1500);
-   lift.autoRun(0);
+   lift.setPosition(0);
 
    //move to nearest ring
    chassis.moveToPoint(-24.497, 34.635, 5000, {.maxSpeed = 65});

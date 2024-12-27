@@ -19,11 +19,13 @@ Lift::Lift() {
 
 std::vector<double> positions = {
     5,    // Empty
-    25,   // Loading,  120
-    //80,//up, not score (rest)
+    25,   // Loading
+    80,//up, not score (rest)
     150  // bring to wall stake
 
 };
+
+//positions are based on ROTATION SENSOR readings (degrees), NOT motor
 
 size_t liftIndex(0);
 
@@ -41,17 +43,23 @@ void Lift::init() {
 void Lift::run() {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
         liftIndex = liftIndex + 1; //increase index by 1
+        if (liftIndex == 2){
+            liftIndex = liftIndex + 1;
+        }
         liftIndex = std::min(liftIndex, size_t(positions.size() - 1)); //keep w/in bounds
         liftMotor.move_absolute(positions[liftIndex], 200); //move arm
 
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
         liftIndex = liftIndex - 1; //decrease index by 1
+        if (liftIndex == 2){
+            liftIndex = liftIndex - 1;
+        }
         liftIndex = std::max(liftIndex, size_t(0)); //keep w/in bounds
         liftMotor.move_absolute(positions[liftIndex], -200); //move arm
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
-        liftMotor.move_absolute(80, 200);
+        setPosition(2);
     }
     /*
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
@@ -79,10 +87,11 @@ void Lift::setPosition(int newIndex){
    liftIndex = newIndex;
 }
 
+/*
 void Lift::autoRun(int position){
     liftMotor.move_absolute(positions[position], 200); //move arm
 }
-
+*/
 
 pros::Task liftTask(
     [](){

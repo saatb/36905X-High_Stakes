@@ -80,9 +80,8 @@ conveyorMotor.move_velocity((0));
 void antiStall(int goal)
 {
 controller.print(1, 1, "stall!");
-pros::delay(150);
 conveyorMotor.move_velocity(goal * -1);
-pros::delay(150);
+pros::delay(300);
 }
 
 pros::Task colorSortingTask(
