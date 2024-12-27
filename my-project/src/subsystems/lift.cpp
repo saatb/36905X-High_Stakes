@@ -18,10 +18,10 @@ Lift::Lift() {
 }
 
 std::vector<double> positions = {
-    0,    // Empty
-    120,   // Loading,  
-    300,//up, not score (rest)
-    580  // bring to wall stake
+    5,    // Empty
+    25,   // Loading,  120
+    //80,//up, not score (rest)
+    150  // bring to wall stake
 
 };
 
@@ -32,9 +32,9 @@ lemlib::PID liftPID(1, 0, 0);
 void Lift::init() {
     liftMotor.set_brake_mode(pros::MotorBrake::hold);
     liftMotor.set_encoder_units(pros::MotorUnits::degrees);
-    liftMotor.move_relative(-10, 200);
     pros::delay(500);
     liftMotor.tare_position();
+    rotation.reset_position();
 }
 
 
@@ -50,6 +50,10 @@ void Lift::run() {
         liftIndex = std::max(liftIndex, size_t(0)); //keep w/in bounds
         liftMotor.move_absolute(positions[liftIndex], -200); //move arm
     }
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
+        liftMotor.move_absolute(80, 200);
+    }
+    /*
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
         //zero the lift manually
         liftMotor.move_relative(-10, 200);
@@ -67,7 +71,7 @@ void Lift::run() {
     else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
         //manual control of lady brown
         liftMotor.move_velocity(0);
-    }
+    }*/
 }
 
 void Lift::setPosition(int newIndex){
@@ -79,16 +83,15 @@ void Lift::autoRun(int position){
     liftMotor.move_absolute(positions[position], 200); //move arm
 }
 
-/*
+
 pros::Task liftTask(
     [](){
         while (true){
-            double out = liftPID.update(positions[liftIndex] - rotation.get_position() / 100.0);
+            double out = liftPID.update(positions[liftIndex] - (rotation.get_angle() / 100.0));
             liftMotor.move_voltage(out * 100);
-            controller.print(0, 0, "%f, %f", rotation.get_position(), liftMotor.get_position());
+            //controller.print(0, 0, "%f, %f", rotation.get_angle(), liftMotor.get_position());
             pros::delay(10); //save resources
         
         }
     }
 );
-*/

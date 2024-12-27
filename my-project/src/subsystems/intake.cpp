@@ -43,7 +43,7 @@ void Intake::run() {
             autoSortEnabled = false;
         }
         else {
-            optical.set_led_pwm(100);  // Increase light
+            optical.set_led_pwm(60);  // Increase light
             autoSortEnabled = true;  
         }
     }
@@ -80,6 +80,7 @@ conveyorMotor.move_velocity((0));
 void antiStall(int goal)
 {
 controller.print(1, 1, "stall!");
+pros::delay(150);
 conveyorMotor.move_velocity(goal * -1);
 pros::delay(150);
 }
