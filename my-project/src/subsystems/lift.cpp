@@ -21,7 +21,7 @@ std::vector<double> positions = {
     5,    // Empty
     25,   // Loading
     80,//up, not score (rest)
-    150  // bring to wall stake
+    150  // bring to wall stake 150
 
 };
 
@@ -29,7 +29,7 @@ std::vector<double> positions = {
 
 size_t liftIndex(0);
 
-lemlib::PID liftPID(1, 0, 0);
+lemlib::PID liftPID(2, 0, 0);
 
 void Lift::init() {
     liftMotor.set_brake_mode(pros::MotorBrake::hold);

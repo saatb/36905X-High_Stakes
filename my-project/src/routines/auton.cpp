@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = redLeft;
+Autonomous::routine Autonomous::auton = skills;
 std::string				  Autonomous::autonName;
 std::string Autonomous::allianceColor = "red";
 
@@ -395,44 +395,43 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    //pros::delay(300);
    //intake.stop();
 
-   chassis.setPose(12, 2, 180);
-   lift.setPosition(3);
+   chassis.setPose(12, 2, 0);
+   intake.autoRun(1, 600);
    pros::delay(1000);
    chassis.moveToPoint(12, 5, 5000, {.forwards = false});
-   chassis.moveToPose(-22.579, 12.3, 90, 5000, {.forwards = false, .minSpeed = 25});
-   pros::delay(2500);
+   chassis.moveToPose(-24, 12.3, 90, 5000, {.forwards = false, .minSpeed = 25});
+   pros::delay(1800);
    clamp.toggle();
    pros::delay(500);
    intake.autoRun(1, 600);
-   pros::delay(1500);
-   lift.setPosition(0);
+   pros::delay(500);
 
    //move to nearest ring
-   chassis.moveToPoint(-24.497, 34.635, 5000, {.maxSpeed = 65});
-   pros::delay(1500);
+   chassis.moveToPoint(-20.497, 34.635, 5000, {.maxSpeed = 65});
+   pros::delay(500);
 
    //move to ring on centerline
-   chassis.moveToPoint(-55, 59.176, 5000, {.maxSpeed = 65}); 
-   pros::delay(1500);
+   chassis.moveToPoint(-55, 61.176, 5000, {.maxSpeed = 65}); 
+   pros::delay(500);
 
    //back up
    chassis.moveToPoint(-50, 55.176, 5000, {.forwards = false, .maxSpeed = 65}); 
 
    //move to third ring
    chassis.moveToPoint(-48.782, 35.937, 5000, {.maxSpeed = 65});
-   pros::delay(3000); 
+   pros::delay(500); 
 
    //move to first ring in group of 3
-   chassis.moveToPoint(-44, 11.954, 5000, {.maxSpeed = 65});
-   pros::delay(3000);
+   chassis.moveToPoint(-42, 11.954, 5000, {.maxSpeed = 65});
+   pros::delay(500);
 
    //move to alliance-wall-side ring
    chassis.moveToPoint(-44, 4, 5000, {.maxSpeed = 65});
-   pros::delay(3000);
+   pros::delay(500);
 
    //move to neutral-wall-side ring
    chassis.moveToPoint(-58,11.582, 5000, {.maxSpeed = 65});
-   pros::delay(3000);
+   pros::delay(500);
 
    //move away from corner
    //chassis.moveToPoint(-55, 27.943, 5000, {.maxSpeed = 65});
@@ -447,7 +446,7 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    intake.autoRun(-1, 600);
    chassis.moveToPoint(-59.5, 10, 5000);
 
-   chassis.moveToPose((36.5), 11, 270, 5000, {.forwards = false, .maxSpeed = 63, .earlyExitRange = 4});
+   chassis.moveToPose((36.5), 3, 270, 5000, {.forwards = false, .maxSpeed = 80, .earlyExitRange = 4});
    //chassis.moveToPose((-59.5 + 96), 11, 90, 5000, {.forwards = false, .maxSpeed = 63});
    pros::delay(3500);
    clamp.toggle();

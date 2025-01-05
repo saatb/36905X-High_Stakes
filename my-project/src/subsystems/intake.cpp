@@ -14,7 +14,7 @@ Intake::Intake() {
 }
 
 bool autoSortEnabled(1);
-bool antiStallEnabled(1);
+bool antiStallEnabled(0);
 
 void enableAutoSort()
 {
@@ -73,21 +73,21 @@ pros::delay(150);
 conveyorMotor.move_velocity((0));
 pros::delay(150);
 conveyorMotor.move_velocity((-600));
-pros::delay(150);
-conveyorMotor.move_velocity((0));
+//pros::delay(150);
+//conveyorMotor.move_velocity((0));
 }
 
 void antiStall(int goal)
 {
 controller.print(1, 1, "stall!");
 conveyorMotor.move_velocity(goal * -1);
-pros::delay(300);
+pros::delay(1000);
 }
 
 pros::Task colorSortingTask(
     [](){
-        double redUpper = 25;
-        double blueLower = 140;
+        double redUpper = 30;
+        double blueLower = 100;
         while (true) {
             if (autoSortEnabled){
         
@@ -115,7 +115,9 @@ pros::Task antiStallTask(
                 double actual = conveyorMotor.get_actual_velocity();
         	if ((actual > -100 && goal == -600) || //check if the actual velocity of the conveyor is close to 0, only if conveyor should be running
             	(actual < 100 && goal == 600)) {
-                antiStall(goal);
+                controller.print(1, 1, "stall!");
+                conveyorMotor.move_velocity(goal * -1);
+                pros::delay(1000);
                 }
             else {
                 controller.clear_line(1);
