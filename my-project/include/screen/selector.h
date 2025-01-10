@@ -14,9 +14,9 @@ namespace Robot{
     private:
     static Autonomous::routine lastAuton;
 
-    constexpr static char redAutons[] = "Red Left\nRed Right";
+    constexpr static char redAutons[] = "Red Left\nRed Right\nRed Left AWP";
 
-    constexpr static char blueAutons[] = "Blue Left\nBlue Right";
+    constexpr static char blueAutons[] = "Blue Left\nBlue Right\nBlue Right AWP";
 
     static void autonUiUpdate(lv_event_t *e);
     };

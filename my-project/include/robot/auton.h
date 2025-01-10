@@ -11,7 +11,7 @@ namespace Robot {
 
     class Autonomous{
         public:
-            enum routine { redLeft = 1, redRight = 2, blueLeft = -1, blueRight = -2, skills = 0, };
+            enum routine { redLeft = 1, redRight = 2, redLeftAWP = 3, blueLeft = -1, blueRight = -2, blueRightAWP = -3, skills = 0, };
             
             static routine auton;
 
@@ -33,6 +33,10 @@ namespace Robot {
             void auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
             
             void auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
+
+            void auton6(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
+
+            void auton7(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift);
     };
 
 }

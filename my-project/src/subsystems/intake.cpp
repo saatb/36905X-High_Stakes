@@ -13,7 +13,7 @@ using namespace Robot::Global;
 Intake::Intake() {
 }
 
-bool autoSortEnabled(1);
+bool autoSortEnabled(0);
 bool antiStallEnabled(0);
 
 void enableAutoSort()

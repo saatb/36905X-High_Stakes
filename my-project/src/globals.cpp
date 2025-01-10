@@ -68,7 +68,7 @@ namespace Global{
     //sensors
     pros::Optical optical(12);
     //pros::Distance distance(18);
-    pros::adi::Potentiometer pot('D');
+    //pros::adi::Potentiometer pot('D');
     pros::Rotation rotation(17);
 }
 }
