@@ -2,69 +2,47 @@
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"
+#include "liblvgl/llemu.hpp"
+#include "liblvgl/misc/lv_area.h"
+#include "liblvgl/widgets/lv_img.h"
+#include "pros/adi.h"
+#include "pros/adi.hpp"
+#include "pros/device.h"
+#include "pros/llemu.hpp"
 #include "pros/misc.h"
+#include <chrono>
+#include <cstdio>
 
-// controller declaration
-pros::Controller controller(pros::E_CONTROLLER_MASTER);
+#include "globals.h"
+#include "pros/apix.h"
+#include "pros/motors.h"
+#include "pros/optical.hpp"
+#include "pros/rtos.h"
+#include "pros/rtos.hpp"
+#include "pros/screen.h"
+#include "robot/drivetrain.h"
+#include "robot/auton.h"
+#include "robot/intake.h"
+#include "robot/clamp.h"
+#include "robot/doinker.h"
+#include "robot/lift.h"
+#include "screen/selector.h"
 
-//motor groups and declaration
-pros::MotorGroup rightMotors({1,2,3}, pros::MotorGearset::blue);
-pros::MotorGroup leftMotors({-4,-5,-6}, pros::MotorGearset::blue);
+using namespace Robot;
+using namespace Robot::Global;
 
-//IMU
-pros::Imu imu(7);
+struct RobotSubsystems {
+   Robot::Autonomous autonomous;
+   Robot::Drivetrain drivetrain;
+   Robot::Intake intake;
+   Robot::Clamp clamp;
+   Robot::Doinker doinker;
+   Robot::Lift lift;
+} subsystem;
 
-//make drivetrain
-lemlib::Drivetrain drivetrain(&leftMotors, &rightMotors, 
-	12, lemlib::Omniwheel::NEW_325, 450, 2);
-
-//odom (only IMU!)
-lemlib::OdomSensors sensors(nullptr, nullptr, 
-	nullptr, nullptr, &imu);
-
-//PID config
-// lateral PID controller
-lemlib::ControllerSettings lateralController(10, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              3, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              20 // maximum acceleration (slew)
-);
-
-// angular PID controller
-lemlib::ControllerSettings angularController(2, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              10, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in degrees
-                                              500, // large error range timeout, in milliseconds
-                                              0 // maximum acceleration (slew)
-);
-
-lemlib::Chassis chassis(drivetrain, lateralController, 
-	angularController, sensors);
-
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
+struct RobotScreen{
+	Robot::autonSelectorScreen selector;
+} screen;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -73,16 +51,32 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	chassis.calibrate();
-	pros::Task screen_task([&](){
+	//calibrate chassis
+    chassis.calibrate();
+
+	screen.selector.selector();
+
+	//zero chassis pose
+	chassis.setPose(0,0,0);
+
+	//set drive motors to brake
+	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+	subsystem.lift.init();//init lift
+	//config optical sensor
+	optical.set_led_pwm(60);
+	optical.set_integration_time(50);
+
+	
+	/*pros::Task screen_task([&](){
 		while (true){
-			pros::lcd::print(0, "X: f%", chassis.getPose().x);
-			pros::lcd::print(1, "Y: f%", chassis.getPose().y);
-			pros::lcd::print(2, "Theta: f%", chassis.getPose().theta);
+			pros::lcd::print(0, "X: %f", chassis.getPose().x);
+			pros::lcd::print(1, "Y: %f", chassis.getPose().y);
+			pros::lcd::print(2, "Theta: %f", chassis.getPose().theta);
 			pros::delay(20);
 		}
-	});
+	});*/
 }
 
 /**
@@ -90,7 +84,12 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+	/*lv_obj_t *img = lv_img_create(lv_scr_act());
+	lv_img_set_src(img, &test2);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
+	screen.selector.selector();
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -101,7 +100,9 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+	screen.selector.selector();
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -114,7 +115,14 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	/*lv_obj_t *img = lv_img_create(lv_scr_act());
+	lv_img_set_src(img, &test1);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
+	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp, subsystem.doinker, subsystem.lift);
+}
+
+
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -132,19 +140,16 @@ void autonomous() {}
 
 
 void opcontrol() {
-
-	while (true) {
-
-		int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-		int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-		int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-		
-		if (!controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
-		chassis.tank(leftY, rightY);
-		}
-		else {
-		chassis.arcade(leftY, rightY);
-		}
-		pros::delay(25);
+	/*lv_obj_t *img = lv_img_create(lv_scr_act());
+	lv_img_set_src(img, &test3);
+	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
+	while (true){
+		subsystem.drivetrain.run();
+		subsystem.intake.run();
+		subsystem.clamp.run();
+		subsystem.doinker.run();
+		subsystem.lift.run();
+		pros::delay(20); //save resources
 	}
 }
+
