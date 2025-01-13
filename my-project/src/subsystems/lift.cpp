@@ -61,6 +61,9 @@ void Lift::run() {
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
         setPosition(2);
     }
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+        setPosition(0);
+    }
     /*
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)){
         //zero the lift manually

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "redLeft",
+    "project_name": "skills",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -300,9 +300,9 @@
       }
     },
     "upload_options": {
-      "description": "redLeft",
+      "description": "redLeft ring rush",
       "icon": "pros",
-      "slot": 2
+      "slot": 1
     },
     "use_early_access": false
   }

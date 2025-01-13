@@ -13,7 +13,7 @@ using namespace Robot::Global;
 Intake::Intake() {
 }
 
-bool autoSortEnabled(0);
+bool autoSortEnabled(1);
 bool antiStallEnabled(0);
 
 void enableAutoSort()
@@ -43,7 +43,7 @@ void Intake::run() {
             autoSortEnabled = false;
         }
         else {
-            optical.set_led_pwm(60);  // Increase light
+            optical.set_led_pwm(60);  // turn on light for color sort (on by default)
             autoSortEnabled = true;  
         }
     }
