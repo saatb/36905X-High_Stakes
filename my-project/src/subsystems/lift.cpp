@@ -20,7 +20,7 @@ Lift::Lift() {
 std::vector<double> positions = {
     5,    // Empty
     25,   // Loading
-    80,//up, not score (rest)
+    80,   //up, not score (rest)
     150  // bring to wall stake 150
 
 };
@@ -36,7 +36,7 @@ void Lift::init() {
     liftMotor.set_encoder_units(pros::MotorUnits::degrees);
     pros::delay(500);
     liftMotor.tare_position();
-    rotation.reset_position();
+    //srotation.reset_position();
 }
 
 
