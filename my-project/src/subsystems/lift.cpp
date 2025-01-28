@@ -18,11 +18,11 @@ Lift::Lift() {
 }
 
 std::vector<double> positions = {
-    5,    // Empty
-    25,   // Loading
+    10,    // Empty
+    37,   // Loading
     80,//up, not score (rest)
-    150  // bring to wall stake 150
-
+    175,  // bring to wall stake (+ some)
+    200     //alliance stake + goal tip(?)
 };
 
 //positions are based on ROTATION SENSOR readings (degrees), NOT motor
@@ -36,7 +36,6 @@ void Lift::init() {
     liftMotor.set_encoder_units(pros::MotorUnits::degrees);
     pros::delay(500);
     liftMotor.tare_position();
-    rotation.reset_position();
 }
 
 
@@ -47,8 +46,10 @@ void Lift::run() {
             liftIndex = liftIndex + 1;
         }
         liftIndex = std::min(liftIndex, size_t(positions.size() - 1)); //keep w/in bounds
+        conveyorMotor.move_velocity(-600);
+        pros::delay(100);
+        conveyorMotor.move_velocity(0);
         liftMotor.move_absolute(positions[liftIndex], 200); //move arm
-
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
         liftIndex = liftIndex - 1; //decrease index by 1

@@ -54,29 +54,29 @@ void initialize() {
 	//calibrate chassis
     chassis.calibrate();
 
-	screen.selector.selector();
+	//screen.selector.selector();
 
 	//zero chassis pose
 	chassis.setPose(0,0,0);
 
 	//set drive motors to brake
-	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	//driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	//driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 	subsystem.lift.init();//init lift
 	//config optical sensor
 	optical.set_led_pwm(60);
 	optical.set_integration_time(50);
 
-	
-	/*pros::Task screen_task([&](){
+	pros::lcd::initialize();
+	pros::Task screen_task([&](){
 		while (true){
 			pros::lcd::print(0, "X: %f", chassis.getPose().x);
 			pros::lcd::print(1, "Y: %f", chassis.getPose().y);
 			pros::lcd::print(2, "Theta: %f", chassis.getPose().theta);
 			pros::delay(20);
 		}
-	});*/
+	});
 }
 
 /**
@@ -85,10 +85,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	/*lv_obj_t *img = lv_img_create(lv_scr_act());
-	lv_img_set_src(img, &test2);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
-	screen.selector.selector();
+	//screen.selector.selector();
 }
 
 /**
@@ -101,7 +98,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-	screen.selector.selector();
+	//screen.selector.selector();
 }
 
 /**
@@ -116,10 +113,11 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	/*lv_obj_t *img = lv_img_create(lv_scr_act());
-	lv_img_set_src(img, &test1);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
-	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp, subsystem.doinker, subsystem.lift);
+	//subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp, subsystem.doinker, subsystem.lift);
+	chassis.setPose(0, 0, 0);
+	chassis.moveToPoint(0, 24, 5000);
+	pros::delay(5000);
+	chassis.moveToPoint(0, 0, 5000, {.forwards = false});
 }
 
 
@@ -140,9 +138,6 @@ void autonomous() {
 
 
 void opcontrol() {
-	/*lv_obj_t *img = lv_img_create(lv_scr_act());
-	lv_img_set_src(img, &test3);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
 	while (true){
 		subsystem.drivetrain.run();
 		subsystem.intake.run();
