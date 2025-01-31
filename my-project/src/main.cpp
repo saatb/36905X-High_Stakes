@@ -60,8 +60,8 @@ void initialize() {
 	chassis.setPose(0,0,0);
 
 	//set drive motors to brake
-	//driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	//driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	driveRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	driveLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 	subsystem.lift.init();//init lift
 	//config optical sensor

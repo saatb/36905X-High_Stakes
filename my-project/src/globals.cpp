@@ -15,26 +15,26 @@ namespace Global{
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
     //drive motor groups
-    pros::MotorGroup driveRight({1,6,7}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
-    pros::MotorGroup driveLeft({-3,-4,-5}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
+    pros::MotorGroup driveRight({14,15,16}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
+    pros::MotorGroup driveLeft({-13,-19,-20}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
 
     //intake and conveyor motors
-    pros::Motor intakeMotor(2, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
-    pros::Motor conveyorMotor(-20, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
-    pros::Motor liftMotor(-13, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
+    pros::Motor intakeMotor(12, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
+    pros::Motor conveyorMotor(-9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
+    pros::Motor liftMotor(-6, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
 
     //sensors
-    pros::Optical optical(12);
-    //pros::Distance distance(18);
+    pros::Optical optical(8);
+    pros::Distance distance(10);
     //pros::adi::Potentiometer pot('D');
-    pros::Rotation rotation(18);
+    pros::Rotation rotation(7);
 
     //imu
-    pros::Imu imu(14);
+    pros::Imu imu(11);
 
     //odom sensors
-    pros::Rotation horSensor(17);
-    pros::Rotation verSensor(15);
+    pros::Rotation horSensor(1);
+    pros::Rotation verSensor(2);
 
     //tracking wheels -3.33
     lemlib::TrackingWheel hor(&horSensor, lemlib::Omniwheel::NEW_275, -3.33);
