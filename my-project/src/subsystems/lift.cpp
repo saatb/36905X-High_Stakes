@@ -23,7 +23,7 @@ std::vector<double> positions = {
     80,//up, not score (rest)
     175,  // bring to wall stake (+ some)
     200,     //alliance stake
-    225     //goal tip
+    235     //goal tip
 };
 
 //positions are based on ROTATION SENSOR readings (degrees), NOT motor

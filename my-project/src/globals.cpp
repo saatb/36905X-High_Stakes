@@ -33,11 +33,11 @@ namespace Global{
     pros::Imu imu(11);
 
     //odom sensors
-    pros::Rotation horSensor(1);
-    pros::Rotation verSensor(2);
+    pros::Rotation horSensor(-1);
+    pros::Rotation verSensor(-2);
 
-    //tracking wheels -3.33
-    lemlib::TrackingWheel hor(&horSensor, lemlib::Omniwheel::NEW_275, -3.33);
+    //tracking wheels -.5, -3.33
+    lemlib::TrackingWheel hor(&horSensor, lemlib::Omniwheel::NEW_275, -4);
     lemlib::TrackingWheel ver(&verSensor, lemlib::Omniwheel::NEW_275, -.5);
 
     //make drivetrain
@@ -62,21 +62,21 @@ namespace Global{
                                                 20 // maximum acceleration (slew)
     );*/
 
-    lemlib::ControllerSettings lateralController(7, // proportional gain (kP)
+    lemlib::ControllerSettings lateralController(15, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              32, // derivative gain (kD)
-                                              0, // anti windup
-                                              0, // small error range, in inches
-                                              0, // small error range timeout, in milliseconds
-                                              0, // large error range, in inches
-                                              0, // large error range timeout, in milliseconds
-                                              0 // maximum acceleration (slew)
+                                              3, // derivative gain (kD)
+                                              3, // anti windup
+                                              1, // small error range, in inches
+                                              100, // small error range timeout, in milliseconds
+                                              3, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
+                                              20 // maximum acceleration (slew)
 );
 
     // angular PID controller
-    lemlib::ControllerSettings angularController(4.3, // proportional gain (kP)
+    lemlib::ControllerSettings angularController(6, // proportional gain (kP) 5
                                                 0, // integral gain (kI)
-                                                35, // derivative gain (kD)
+                                                50, // derivative gain (kD)
                                                 3, // anti windup
                                                 1, // small error range, in degrees
                                                 100, // small error range timeout, in milliseconds

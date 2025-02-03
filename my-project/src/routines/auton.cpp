@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = redLeft;
+Autonomous::routine Autonomous::auton = redLeftAWP;
 std::string				  Autonomous::autonName;
 std::string Autonomous::allianceColor = "red";
 
@@ -25,7 +25,7 @@ bool goalRush = false;
 /*
 NOTES:
    - imu is mounted horizontally, so x and y are FLIPPED from path.jerryio
-   - towards negative corner is NEGATIVE x, toward positive corner is POSITIVE x (opposite of path.jerryio)
+   - towards negative corner is NEGATIVE x, toward positive corner is POSITIVE x (opposite as path.jerryio)
    - towards blue alliance is POSITIVE y, towards red alliance is NEGATIVE y (same as path.jerryio)
    - RED to BLUE transformation is inverting y-values (might also need to change headings)
 */
@@ -39,14 +39,9 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     //picks up mogo, then scores preload + adjacent ring, then scores both midline rings
     //then touches ladder with intake
 
-    //release first stage
-    //intake.autoRun(-1, 600);
-    //pros::delay(150);
-    //intake.stop();
-
+    
     //set pose
     chassis.setPose(-8, 58.144, (180-215));
-
     //move to mogo, motion chained
     //chassis.moveToPoint(22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
     chassis.moveToPose(25.946, 32.919, (180-270), 5000, {.forwards = false, .minSpeed = 30/*.maxSpeed = 63*/});
@@ -83,7 +78,8 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
     //back up after scoring
     chassis.moveToPoint(3.296, 24.919, 5000, {.forwards = false});
 
-    chassis.moveToPose(42.5, 45, (180-40), 5000);
+    chassis.moveToPose(42.5, 45, (180-40), 5000); 
+    
     }
 
 void Autonomous::auton2(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
@@ -517,76 +513,16 @@ void Autonomous::auton6(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 }
 
 void Autonomous::auton7(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   controller.print(0, 0, "rl, q: %d", quals);
-   //DONE
-   //autonomous 2 --> redLeft AWP (double mogo)
-
-    //line up straight back from mogo
-    //picks up mogo, then scores preload + adjacent ring, then scores both midline rings
-    //then touches ladder with intake
-
-    //release first stage
-    //intake.autoRun(-1, 600);
-    //pros::delay(150);
-    //intake.stop();
-
-    //set pose
-    chassis.setPose(-8, -58.144, 215);
-
-    //move to mogo, motion chained
-    //chassis.moveToPoint(22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-    chassis.moveToPose(25.946, -32.919, 270, 5000, {.forwards = false, .minSpeed = 30/*.maxSpeed = 63*/});
-    pros::delay(1850);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(500);
-    intake.autoRun(1, 600);
-    
-    //move to single stack adjacent to mogo 
-    chassis.moveToPoint(0.296, -28.919,5000); // x-coord from jerry was 38.596
-    pros::delay(1000);
-    chassis.moveToPoint(4.296, -40.919,5000, {.forwards = false});
+   //autonomous 7 --> red left AWP
    
-    /*
-    slowly move to leftmost stack of rings on midline
-    chassis.moveToPose(-6.296, -18.919, 0, 3000);
+   chassis.setPose(0, 0, 345);
 
-    back up to prepare for second stack of rings
-    chassis.moveToPoint(0, -30.919, 2000, {.forwards = false});
-    */
+   chassis.moveToPose(-16, 42, 330, 5000);
+   intakeMotor.move_velocity(200);
+   pros::delay(800);
+   doinker.toggle();
+   chassis.moveToPose(-16, 20, 0, 5000, {.forwards = false});
 
-    //move to first stack
-    //chassis.moveToPose(-3.296, -6, 5, 3500, {.minSpeed = 45});
-    //chassis.moveToPose(2.296, -6, 5, 3500, {.minSpeed = 45});
-
-    //back up after scoring
-    //chassis.moveToPoint(-8.296, -24.919, 5000, {.forwards = false});
-
-    //move to second stack
-    chassis.moveToPoint(8, -6, 3500, {.minSpeed = 45});
-
-    //back up after scoring
-    chassis.moveToPoint(3.296, -36.919, 5000, {.forwards = false});
-
-    //go to other side mogo
-    chassis.moveToPoint(40.5, -70, 3000, {.maxSpeed = 80});
-    intakeMotor.move_velocity(-600);
-    chassis.moveToPoint(60.5, -65, 3000, {.maxSpeed = 80});
-    clamp.toggle();
-    chassis.moveToPoint(59, -35.919, 5000, {.forwards = false, .maxSpeed = 60});
-    conveyorMotor.move_velocity(-600);
-    pros::delay(1500);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(300);
-    intake.autoRun(1, 600, 600);
-    lift.setPosition(2);
-    
-    chassis.moveToPoint(82.5, -38.919, 5000, {.maxSpeed = 60});
-
-    chassis.moveToPoint(50, -15.919, 5000, {.forwards = false});
 }
 
 

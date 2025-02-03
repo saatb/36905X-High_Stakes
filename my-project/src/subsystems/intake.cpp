@@ -13,8 +13,9 @@ using namespace Robot::Global;
 Intake::Intake() {
 }
 
-bool autoSortEnabled(0);
+bool autoSortEnabled(1);
 bool antiStallEnabled(0);
+bool detectedRing(0);
 
 void enableAutoSort()
 {
@@ -68,11 +69,14 @@ void Intake::stop(){
 
 void sort()
 {
+if (distance.get_distance() < 20){
 controller.print(1, 1, "ring detected!");
 pros::delay(150);
 conveyorMotor.move_velocity((0));
-pros::delay(150);
+pros::delay(300);
 conveyorMotor.move_velocity((-600));
+detectedRing = false;
+}
 //pros::delay(150);
 //conveyorMotor.move_velocity((0));
 }
@@ -89,7 +93,7 @@ pros::Task colorSortingTask(
         double redUpper = 30;
         double blueLower = 100;
         while (true) {
-            if (autoSortEnabled){
+            if ((autoSortEnabled) && (!detectedRing)){
         
         std::string allianceColor = Robot::Autonomous::allianceColor;
         	if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
@@ -98,9 +102,15 @@ pros::Task colorSortingTask(
                 //double startTime = pros::millis();
                 //start a timer
                 //while ((pros::millis() - startTime) < 300){
+                detectedRing = true;
                 sort();
                 }
-        }          
+        }
+        if (detectedRing){
+            sort();
+        }   
+
+        controller.print(1, 1, "%f, %f", distance.get(), optical.get_hue());       
 		pros::delay(20); //save resources
         }
     }

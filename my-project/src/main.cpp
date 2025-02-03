@@ -66,7 +66,7 @@ void initialize() {
 	subsystem.lift.init();//init lift
 	//config optical sensor
 	optical.set_led_pwm(60);
-	optical.set_integration_time(50);
+	optical.set_integration_time(40);
 
 	pros::lcd::initialize();
 	pros::Task screen_task([&](){
@@ -74,7 +74,8 @@ void initialize() {
 			pros::lcd::print(0, "X: %f", chassis.getPose().x);
 			pros::lcd::print(1, "Y: %f", chassis.getPose().y);
 			pros::lcd::print(2, "Theta: %f", chassis.getPose().theta);
-			pros::delay(20);
+			pros::lcd::print(3, "Conveyor: %d", conveyorMotor.get_current_draw());
+			pros::delay(100);
 		}
 	});
 }
@@ -113,11 +114,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	//subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp, subsystem.doinker, subsystem.lift);
-	chassis.setPose(0, 0, 0);
-	chassis.moveToPoint(0, 24, 5000);
-	pros::delay(5000);
-	chassis.moveToPoint(0, 0, 5000, {.forwards = false});
+	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp, subsystem.doinker, subsystem.lift);
 }
 
 
