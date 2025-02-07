@@ -13,18 +13,32 @@ using namespace Robot::Global;
 Intake::Intake() {
 }
 
-bool autoSortEnabled(1);
-bool antiStallEnabled(0);
+bool autoSortEnabled(0);
+bool antiStallEnabled(1);
 bool detectedRing(0);
 
-void enableAutoSort()
+void Intake::enableAutoSort()
 {
           // Enable auto sort
+          autoSortEnabled = true;
 }
 
-void disableAutoSort()
+void Intake::disableAutoSort()
 {
          // Disable auto sort
+         autoSortEnabled = false;
+}
+
+void Intake::enableAntiStall()
+{
+          // Enable auto sort
+          antiStallEnabled = true;
+}
+
+void Intake::disableAntiStall()
+{
+         // Disable auto sort
+         antiStallEnabled = false;
 }
 
 void Intake::run() {
@@ -40,11 +54,9 @@ void Intake::run() {
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
         if (autoSortEnabled){
-            optical.set_led_pwm(0);
             autoSortEnabled = false;
         }
         else {
-            optical.set_led_pwm(60);  // turn on light for color sort (on by default)
             autoSortEnabled = true;  
         }
     }
@@ -81,11 +93,14 @@ detectedRing = false;
 //conveyorMotor.move_velocity((0));
 }
 
-void antiStall(int goal)
+void antiStall()
 {
 controller.print(1, 1, "stall!");
-conveyorMotor.move_velocity(goal * -1);
-pros::delay(1000);
+conveyorMotor.move_velocity(-600);
+intakeMotor.move_velocity(-200);
+pros::delay(200);
+conveyorMotor.move_velocity(600);
+intakeMotor.move_velocity(600);
 }
 
 pros::Task colorSortingTask(
@@ -118,21 +133,26 @@ pros::Task colorSortingTask(
 
 pros::Task antiStallTask(
     [](){
-        
+        double timer1 = 0;
         while (true) {
             if (antiStallEnabled){ //only run code if anti stall is enabled
-                double goal = conveyorMotor.get_target_velocity();
-                double actual = conveyorMotor.get_actual_velocity();
-        	if ((actual > -100 && goal == -600) || //check if the actual velocity of the conveyor is close to 0, only if conveyor should be running
-            	(actual < 100 && goal == 600)) {
-                controller.print(1, 1, "stall!");
-                conveyorMotor.move_velocity(goal * -1);
-                pros::delay(1000);
-                }
+                double convGoal = conveyorMotor.get_target_velocity();
+                double intakeGoal = intakeMotor.get_target_velocity();
+                double draw = conveyorMotor.get_current_draw();
+                
+        	if (draw > 2450) {
+                    if (timer1 > 40){
+                        antiStall();
+                        timer1 = 0;
+                    }
+                    else {
+                        timer1 += 20;
+                    }
+                    }
             else {
-                controller.clear_line(1);
+                timer1 = 0;
             }
-        }          
+        }
 		pros::delay(20); //save resources
         }
     }

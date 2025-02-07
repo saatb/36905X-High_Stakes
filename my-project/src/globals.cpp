@@ -74,7 +74,7 @@ namespace Global{
 );
 
     // angular PID controller
-    lemlib::ControllerSettings angularController(6, // proportional gain (kP) 5
+    lemlib::ControllerSettings angularController(5.5, // proportional gain (kP) 5
                                                 0, // integral gain (kI)
                                                 50, // derivative gain (kD)
                                                 3, // anti windup

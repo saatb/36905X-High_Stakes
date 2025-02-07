@@ -12,5 +12,7 @@ namespace Robot {
         void antiStall(int goal);
         void enableAutoSort();
         void disableAutoSort();
+        void enableAntiStall();
+        void disableAntiStall();
     };
 }

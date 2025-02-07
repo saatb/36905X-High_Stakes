@@ -65,8 +65,8 @@ void initialize() {
 
 	subsystem.lift.init();//init lift
 	//config optical sensor
-	optical.set_led_pwm(60);
 	optical.set_integration_time(40);
+	optical.set_led_pwm(100);
 
 	pros::lcd::initialize();
 	pros::Task screen_task([&](){
