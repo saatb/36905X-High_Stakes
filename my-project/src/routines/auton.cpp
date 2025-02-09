@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = skills;
+Autonomous::routine Autonomous::auton = redRight;
 std::string				  Autonomous::autonName;
 std::string Autonomous::allianceColor = "red";
 
@@ -262,10 +262,10 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 
    chassis.moveToPoint(40, 25, 5000, {.forwards = false, .maxSpeed = 65});
    chassis.turnToHeading(0, 1000);
-   chassis.moveToPoint(56, 50, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(53, 50, 5000, {.maxSpeed = 65});
    chassis.turnToHeading(90, 1000);
    chassis.turnToHeading(180, 1000);
-   chassis.moveToPoint(44, -9, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(47, -9, 5000, {.maxSpeed = 65});
 
    chassis.moveToPoint(40, 6, 3000, {.forwards = false});
    chassis.turnToHeading(90, 1000);
@@ -391,7 +391,7 @@ void Autonomous::auton7(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    pros::delay(1200);
    chassis.moveToPoint(19, 38, 5000, {.forwards = false});
 }
-
+/*
 void Autonomous::auton8(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    //autonomous 8 --> red right goal
    
@@ -410,7 +410,7 @@ void Autonomous::auton8(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 void Autonomous::auton9(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    //autonomous 9 --> blue left goal
 
-}
+} */
 
 void Autonomous::autonMove(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
     switch (Autonomous::auton) {
@@ -432,12 +432,14 @@ void Autonomous::autonMove(Intake &intake, Clamp &clamp, Doinker &doinker, Lift 
    case redLeftAWP:
       auton7(intake, clamp, doinker, lift);
       break;
+   /*
    case redRightGoal:
       auton8(intake, clamp, doinker, lift);
       break;
    case blueLeftGoal:
       auton9(intake, clamp, doinker, lift);
       break;
+   */
    case skills:
       auton5(intake, clamp, doinker, lift);
       break;
@@ -460,10 +462,13 @@ void Autonomous::autonSwitcher(int autonNum){
 		Autonomous::autonName = "Red Left AWP";
 		Autonomous::auton	  = redLeftAWP;
       Autonomous::allianceColor = std::string("red");
+      break;
+   /*
    case 4:
 		Autonomous::autonName = "Red Right Goal";
 		Autonomous::auton	  = redRightGoal;
       Autonomous::allianceColor = std::string("red");
+   */
 	case -1:
 		Autonomous::autonName = "Blue Left";
 		Autonomous::auton	  = blueLeft;
@@ -479,11 +484,13 @@ void Autonomous::autonSwitcher(int autonNum){
 		Autonomous::auton	  = blueRightAWP;
       Autonomous::allianceColor = std::string("blue");
 		break;
+   /*
    case -4:
 		Autonomous::autonName = "Blue Left Goal";
 		Autonomous::auton	  = blueLeftGoal;
       Autonomous::allianceColor = std::string("blue");
 		break;
+   */
    case 0:
       Autonomous::autonName = "Skills";
       Autonomous::auton    = skills;
