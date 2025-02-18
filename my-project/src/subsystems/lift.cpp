@@ -30,7 +30,7 @@ std::vector<double> positions = {
 
 size_t liftIndex(0);
 
-lemlib::PID liftPID(2, 0, 0);
+lemlib::PID liftPID(2, 0, 1.5);
 
 void Lift::init() {
     liftMotor.set_brake_mode(pros::MotorBrake::hold);
@@ -54,7 +54,7 @@ void Lift::run() {
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
         liftIndex = liftIndex - 1; //decrease index by 1
-        if (liftIndex == 2){
+        if (liftIndex == 2 || liftIndex == 4){
             liftIndex = liftIndex - 1;
         }
         liftIndex = std::max(liftIndex, size_t(0)); //keep w/in bounds
@@ -64,6 +64,9 @@ void Lift::run() {
         setPosition(2);
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+        setPosition(5);
+    }
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
         setPosition(0);
     }
     /*

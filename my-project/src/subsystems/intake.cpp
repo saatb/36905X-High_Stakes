@@ -13,7 +13,7 @@ using namespace Robot::Global;
 Intake::Intake() {
 }
 
-bool autoSortEnabled(0);
+bool autoSortEnabled(1);
 bool antiStallEnabled(1);
 bool detectedRing(0);
 
@@ -55,6 +55,7 @@ void Intake::run() {
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
         if (autoSortEnabled){
             autoSortEnabled = false;
+            optical.set_led_pwm(0);
         }
         else {
             autoSortEnabled = true;
@@ -82,20 +83,20 @@ void Intake::stop(){
 
 void sort()
 {
-double position = conveyorMotor.get_position();
 
-//if (conveyorMotor.get_position() == position + 130){
-pros::delay(100);
+if (distance.get() < 25){
+pros::delay(20);
 conveyorMotor.move_velocity((0));
-pros::delay(150);
-conveyorMotor.move_velocity((-600));
-//}
+pros::delay(70);
+conveyorMotor.move_velocity((600));
+}
+
 
 }
 
 void antiStall()
 {
-controller.print(1, 1, "stall!");
+//controller.print(1, 1, "stall!");
 conveyorMotor.move_velocity(-600);
 intakeMotor.move_velocity(-200);
 pros::delay(200);
@@ -105,12 +106,14 @@ intakeMotor.move_velocity(600);
 
 pros::Task colorSortingTask(
     [](){
-        double redUpper = 30;
+        double redUpper = 28;
         double blueLower = 100;
         while (true) {
             if ((autoSortEnabled)){
         
         std::string allianceColor = Robot::Autonomous::allianceColor;
+
+
         	if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
             	((allianceColor == std::string("blue") && redUpper > optical.get_hue()))){
                 //if the object is of the opposite color, trigger the conveyor to stop

@@ -62,9 +62,9 @@ namespace Global{
                                                 20 // maximum acceleration (slew)
     );*/
 
-    lemlib::ControllerSettings lateralController(15, // proportional gain (kP)
+    lemlib::ControllerSettings lateralController(9, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              3, // derivative gain (kD)
+                                              6.5, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds

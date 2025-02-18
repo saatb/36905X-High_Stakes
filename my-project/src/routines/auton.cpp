@@ -15,7 +15,7 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = redRight;
+Autonomous::routine Autonomous::auton = redLeft;
 std::string				  Autonomous::autonName;
 std::string Autonomous::allianceColor = "red";
 
@@ -54,43 +54,52 @@ void Autonomous::auton1(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    chassis.moveToPoint(-24, -34, 1000, {.forwards = false});
 
    //move to close ring stack
-   chassis.moveToPoint(-42, -25.5, 5000, {.maxSpeed = 50});
+   chassis.moveToPoint(-38, -25.5, 5000, {.maxSpeed = 50});
    pros::delay(2400);
 
    //touch ladder
-   chassis.moveToPoint(-7, -39, 5000, {.forwards = false, .maxSpeed = 50});
+   chassis.moveToPoint(-1, -39, 5000, {.forwards = false, .maxSpeed = 50});
    lift.setPosition(2);
+
+   
 
    }
 
 void Autonomous::auton2(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    //redLeft
    //score alliance stake
+   if (quals) {
    chassis.setPose(0, 0, 140);
    lift.setPosition(2);
-   chassis.moveToPoint(3, -6, 5000);
+   chassis.moveToPoint(3, -6, 5000, {.maxSpeed = 40});
    lift.setPosition(3);
 
    //move to goal and clamp
    chassis.moveToPoint(-14, 30, 5000, {.forwards = false, .maxSpeed = 65});
-   lift.setPosition(0);
    pros::delay(1050);
    clamp.toggle();
+   lift.setPosition(0);
    intake.autoRun(1, 200, 600);
+
+   chassis.turnToHeading(320, 1000);
    
-   chassis.moveToPoint(-29.5, 45, 5000, {.maxSpeed = 50});
-   pros::delay(3000);
+   chassis.moveToPoint(-30, 45, 2000, {.maxSpeed = 60});
+   chassis.moveToPose(-48, 46.5, 270, 2000, {.maxSpeed = 60});
+   pros::delay(1000);
+   chassis.moveToPoint(-20, 30, 2000, {.forwards = false});
+   pros::delay(500);
+   chassis.moveToPoint(-35, 30, 2000, {.maxSpeed = 60});
 
-   //back up slightly
-   chassis.moveToPoint(-22, 34, 1000, {.forwards = false});
+   pros::delay(2500);
 
-   //move to close ring stack
-   chassis.moveToPoint(-38, 23, 5000, {.maxSpeed = 50});
-   pros::delay(2400);
-
-   //touch ladder
-   chassis.moveToPoint(-3, 39, 5000, {.forwards = false, .maxSpeed = 50});
+   chassis.moveToPoint(-3, 42, 5000, {.forwards = false, .maxSpeed = 50});
    lift.setPosition(2);
+   }
+   else {
+      //ring rush
+      chassis.setPose(0, 0, 350);
+
+   }
 
 }
 
@@ -120,11 +129,20 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
       intake.stop();
    }
    else if (!quals) {   
-   chassis.turnToHeading(0, 1000);
-   
-   chassis.moveToPoint(42, 24, 5000, {.forwards = false, .maxSpeed = 65});
+   //start
 
-   pros::delay(1000);
+   chassis.moveToPoint(52, -4, 5000, {.maxSpeed = 65});
+
+   doinker.toggle();   
+
+   chassis.turnToHeading(40, 2000);
+   
+   chassis.moveToPose(38, 18, 0, 2000, {.forwards = false, .maxSpeed = 65});
+
+   doinker.toggle();
+
+   pros::delay(2000);
+
    intake.stop();
 
    clamp.toggle();
@@ -133,13 +151,16 @@ void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 
    chassis.turnToHeading(180, 1000);
 
-   chassis.moveToPoint(42, 38, 5000, {.forwards = false, .maxSpeed = 65});
+   chassis.moveToPoint(42, 36, 5000, {.forwards = false, .maxSpeed = 65});
+
+   
 
    }
 
 }
 
 void Autonomous::auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
+   
    //blueLeft
 
    chassis.setPose(0, 0, 180-220);
@@ -156,7 +177,7 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 
    chassis.moveToPoint(42, -30, 5000);
 
-   pros::delay(5000);
+   pros::delay(3000);
 
    if (quals){
       lift.setPosition(2);
@@ -164,12 +185,21 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
       pros::delay(4000);
       intake.stop();
    }
+
    else if (!quals) {   
    chassis.turnToHeading(180-0, 1000);
+
+   chassis.moveToPoint(52, 5, 5000);
+
+   doinker.toggle();
+
+   chassis.turnToHeading(180-220, 1000);
    
-   chassis.moveToPoint(42, -24, 5000, {.forwards = false, .maxSpeed = 65});
+   chassis.moveToPoint(38, -18, 5000, {.forwards = false, .maxSpeed = 65});
 
    pros::delay(1000);
+
+   doinker.toggle();
 
    intake.stop();
 
@@ -186,7 +216,7 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 }
 
 void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   chassis.setPose(0, 0, 180);
+   chassis.setPose(0, -1, 180);
    //score alliance stake
    lift.setPosition(1);
    intake.disableAntiStall();
@@ -212,10 +242,10 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 
    chassis.turnToHeading(315, 1000);
    chassis.moveToPose(-36, 48, 0, 5000, {.minSpeed = 40, .earlyExitRange = 4});
-   chassis.moveToPoint(-42, 78, 5000, {.maxSpeed = 45});
+   chassis.moveToPoint(-44, 78, 5000, {.maxSpeed = 45});
    pros::delay(2000);
    chassis.turnToHeading(220, 1000);
-   chassis.moveToPose(-64, 60, 270, 5000, {.maxSpeed = 40});
+   chassis.moveToPose(-64, 58.5, 270, 5000, {.maxSpeed = 50});
    pros::delay(2000);
    lift.setPosition(1);
    intake.disableAntiStall();
@@ -225,10 +255,10 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    pros::delay(1000);
    lift.setPosition(0);
 
-   chassis.setPose(-64, 60, 270); //reset
+   chassis.setPose(-64, 58.5, 270); //reset
    intake.enableAntiStall();
    intake.autoRun();
-   chassis.moveToPose(-50, 59.5, 270, 2000, {.forwards = false});
+   chassis.moveToPose(-50, 58.5, 270, 2000, {.forwards = false});
    chassis.turnToHeading(180, 1000);
    chassis.moveToPoint(-52, -9, 5000, {.maxSpeed = 45});
    pros::delay(1000);
@@ -243,6 +273,8 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    chassis.moveToPoint(-64, -5, 5000, {.forwards = false, .maxSpeed = 70});
    pros::delay(1000);
    clamp.toggle();
+   intake.stop();
+   conveyorMotor.move_relative(-100, -600);
    pros::delay(300);
    chassis.moveToPoint(-42, 5, 5000, {.maxSpeed = 70});
    chassis.turnToHeading(270, 1000);
@@ -253,16 +285,17 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    clamp.toggle();
    pros::delay(300);
    chassis.turnToHeading(0, 1000);
+   intake.autoRun();
    chassis.moveToPoint(18, 28, 5000, {.maxSpeed = 65});
    pros::delay(500);
    chassis.turnToHeading(90, 1000);
-   chassis.moveToPoint(50, 28, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(50, 31, 5000, {.maxSpeed = 65});
    
    pros::delay(500);
 
    chassis.moveToPoint(40, 25, 5000, {.forwards = false, .maxSpeed = 65});
    chassis.turnToHeading(0, 1000);
-   chassis.moveToPoint(53, 50, 5000, {.maxSpeed = 65});
+   chassis.moveToPoint(52, 60, 5000, {.maxSpeed = 65});
    chassis.turnToHeading(90, 1000);
    chassis.turnToHeading(180, 1000);
    chassis.moveToPoint(47, -9, 5000, {.maxSpeed = 65});
@@ -391,26 +424,23 @@ void Autonomous::auton7(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    pros::delay(1200);
    chassis.moveToPoint(19, 38, 5000, {.forwards = false});
 }
-/*
+
 void Autonomous::auton8(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    //autonomous 8 --> red right goal
    
-   chassis.setPose(0, 0, 345);
-
-   chassis.moveToPose(-16, 42, 330, 5000);
-   intakeMotor.move_velocity(200);
-   pros::delay(800);
-   doinker.toggle();
-   chassis.moveToPose(-16, 20, 0, 5000, {.forwards = false});
-   pros::delay(800);
-   doinker.toggle();
+   chassis.setPose(0, 0, 180);
+   chassis.moveToPoint(0, 10, 5000, {.forwards = false});
 
 }
 
 void Autonomous::auton9(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   //autonomous 9 --> blue left goal
+   //autonomous 9 --> blue leave
+   
+   chassis.setPose(0, 0, 180);
+   pros::delay(5000);
+   chassis.moveToPoint(0, 10, 5000, {.forwards = false});
 
-} */
+}
 
 void Autonomous::autonMove(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
     switch (Autonomous::auton) {
@@ -432,14 +462,14 @@ void Autonomous::autonMove(Intake &intake, Clamp &clamp, Doinker &doinker, Lift 
    case redLeftAWP:
       auton7(intake, clamp, doinker, lift);
       break;
-   /*
-   case redRightGoal:
+   
+   case redLeave:
       auton8(intake, clamp, doinker, lift);
       break;
-   case blueLeftGoal:
+   case blueLeave:
       auton9(intake, clamp, doinker, lift);
       break;
-   */
+
    case skills:
       auton5(intake, clamp, doinker, lift);
       break;
@@ -463,12 +493,13 @@ void Autonomous::autonSwitcher(int autonNum){
 		Autonomous::auton	  = redLeftAWP;
       Autonomous::allianceColor = std::string("red");
       break;
-   /*
+   
    case 4:
-		Autonomous::autonName = "Red Right Goal";
-		Autonomous::auton	  = redRightGoal;
+		Autonomous::autonName = "Red Leave";
+		Autonomous::auton	  = redLeave;
       Autonomous::allianceColor = std::string("red");
-   */
+      break;
+   
 	case -1:
 		Autonomous::autonName = "Blue Left";
 		Autonomous::auton	  = blueLeft;
@@ -484,13 +515,13 @@ void Autonomous::autonSwitcher(int autonNum){
 		Autonomous::auton	  = blueRightAWP;
       Autonomous::allianceColor = std::string("blue");
 		break;
-   /*
+   
    case -4:
-		Autonomous::autonName = "Blue Left Goal";
-		Autonomous::auton	  = blueLeftGoal;
+		Autonomous::autonName = "Blue Leave";
+		Autonomous::auton	  = blueLeave;
       Autonomous::allianceColor = std::string("blue");
 		break;
-   */
+   
    case 0:
       Autonomous::autonName = "Skills";
       Autonomous::auton    = skills;

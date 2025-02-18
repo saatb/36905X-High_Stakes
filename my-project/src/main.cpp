@@ -54,7 +54,7 @@ void initialize() {
 	//calibrate chassis
     chassis.calibrate();
 
-	screen.selector.selector();
+	//screen.selector.selector();
 
 	//zero chassis pose
 	chassis.setPose(0,0,0);
@@ -65,19 +65,21 @@ void initialize() {
 
 	subsystem.lift.init();//init lift
 	//config optical sensor
-	optical.set_led_pwm(100);
 	optical.set_integration_time(40);
+	optical.set_led_pwm(100);
 
-	/*pros::lcd::initialize();
+	pros::lcd::initialize();
 	pros::Task screen_task([&](){
 		while (true){
 			pros::lcd::print(0, "X: %f", chassis.getPose().x);
 			pros::lcd::print(1, "Y: %f", chassis.getPose().y);
 			pros::lcd::print(2, "Theta: %f", chassis.getPose().theta);
 			pros::lcd::print(3, "Conveyor: %d", conveyorMotor.get_current_draw());
-			pros::delay(100);
+			pros::lcd::print(4, "Color: %f", optical.get_hue());
+			pros::lcd::print(5, "Distance: %d", distance.get());
+			pros::delay(40);
 		}
-	});*/
+	});
 }
 
 /**
@@ -86,7 +88,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	screen.selector.selector();
+	//screen.selector.selector();
 }
 
 /**
@@ -99,7 +101,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-	screen.selector.selector();
+	//screen.selector.selector();
 }
 
 /**
