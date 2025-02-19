@@ -98,7 +98,6 @@ void antiStall()
 {
 //controller.print(1, 1, "stall!");
 conveyorMotor.move_velocity(-600);
-intakeMotor.move_velocity(-200);
 pros::delay(200);
 conveyorMotor.move_velocity(600);
 intakeMotor.move_velocity(600);
