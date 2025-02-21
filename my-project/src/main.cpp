@@ -119,7 +119,15 @@ void autonomous() {
 	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp, subsystem.doinker, subsystem.lift);
 }
 
-
+void skillsMacro(){
+   subsystem.lift.setPosition(1);
+   subsystem.intake.disableAntiStall();
+   subsystem.intake.autoRun();
+   pros::delay(500);
+   subsystem.intake.stop();
+   subsystem.lift.setPosition(4);
+   pros::delay(1000);
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task

@@ -15,11 +15,12 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = blueRightAWP;
+Autonomous::routine Autonomous::auton = skills;
 std::string				  Autonomous::autonName;
-std::string Autonomous::allianceColor = "blue";
+std::string Autonomous::allianceColor = "red";
 
 bool quals = true;
+bool ringRush = true;
 
 /*
 NOTES:
@@ -212,98 +213,131 @@ void Autonomous::auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 
 void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
    chassis.setPose(0, -1, 180);
-   //score alliance stake
+   intake.disableAutoSort();
+
+//score alliance stake
    lift.setPosition(1);
    intake.disableAntiStall();
    intake.autoRun();
    pros::delay(500);
    intake.stop();
    lift.setPosition(4);
-   pros::delay(1000);
+   pros::delay(500);
 
-   //mogo
+//mogo
    chassis.moveToPoint(0, 4, 1000, {.forwards = false});
+   chassis.turnToHeading(90, 500);
+   chassis.moveToPoint(-24, 5, 2000, {.forwards = false, .maxSpeed = 55});
    lift.setPosition(0);
-   chassis.turnToHeading(90, 1000);
-   chassis.moveToPoint(-24, 5, 5000, {.forwards = false, .maxSpeed = 55});
    pros::delay(950);
    clamp.toggle();
    intake.enableAntiStall();
 
-   //start scoring rings
-   chassis.turnToHeading(0, 1000);
+//start scoring rings
+   chassis.turnToHeading(0, 500);
    intake.autoRun();
-   chassis.moveToPoint(-20, 28, 5000, {.maxSpeed = 60});
+   chassis.moveToPoint(-22, 28, 1500); //max speed 60
 
-   chassis.turnToHeading(315, 1000);
-   chassis.moveToPose(-36, 48, 0, 5000, {.minSpeed = 40, .earlyExitRange = 4});
-   chassis.moveToPoint(-44, 78, 5000, {.maxSpeed = 45});
-   pros::delay(2000);
-   chassis.turnToHeading(220, 1000);
-   chassis.moveToPose(-64, 58.5, 270, 5000, {.maxSpeed = 50});
-   pros::delay(2000);
+   chassis.turnToHeading(315, 500);
+   chassis.moveToPoint(-36, 48, 5000, {.minSpeed = 70, .earlyExitRange = 4});
+   chassis.moveToPoint(-44, 78, 5000);
+   pros::delay(500);
+
+//wall stake 1
+   chassis.turnToHeading(220, 500);
+   chassis.moveToPose(-64, 57.5, 270, 5000);
+   pros::delay(1000);
+   lift.setPosition(1);
+   intake.disableAntiStall();
+   pros::delay(1500);
+   intake.stop();
+   conveyorMotor.move_relative(-200, -600);
+   lift.setPosition(4);
+   pros::delay(1000);
+
+   chassis.setPose(-64, 57.5, 270); //reset
+   intake.enableAntiStall();
+   intake.autoRun();
+   chassis.moveToPoint(-54, 58.5, 2000, {.forwards = false});
+   lift.setPosition(0);
+   chassis.turnToHeading(180, 500);
+
+//3 rings
+   chassis.moveToPoint(-52, 20, 2500, {.minSpeed = 65, .earlyExitRange = 4}); //motion chain
+   chassis.moveToPoint(-52, -7, 2000, {.maxSpeed = 55});
+
+   chassis.moveToPoint(-45, 5, 1500, {.forwards = false}); //back up
+
+//1 ring
+   chassis.moveToPoint(-64, 7, 2000); //max speed 60
+
+//cornering
+   chassis.moveToPoint(-55, 5, 5000, {.forwards = false, .maxSpeed = 50});
+   chassis.turnToHeading(45, 500);
+   chassis.moveToPoint(-64, -5, 1500, {.forwards = false, .maxSpeed = 70});
+   pros::delay(1000);
+   clamp.toggle();
+   intake.stop();
+   conveyorMotor.move_relative(-200, -600);
+   pros::delay(300);
+
+//leave corner
+   chassis.moveToPoint(-42, 5, 5000, {.minSpeed = 70, .earlyExitRange = 4}); //motionchained
+
+//mogo 2
+   chassis.moveToPose(21, 4.7, 270, 3000, {.forwards = false, .minSpeed = 70}); //max speed 70
+   pros::delay(1650);
+   clamp.toggle();
+   pros::delay(300);
+   intake.autoRun();
+   
+//first ring close to mogo
+   chassis.moveToPoint(18, 28, 5000); //max speed 65
+
+//ring under ladder
+   chassis.moveToPoint(-6, 50, 2000);
+   chassis.moveToPoint(18, 27, 2000, {.forwards = false});
+
+//ring to right of first ring
+   //chassis.turnToHeading(90, 1000);
+   chassis.moveToPoint(50, 27, 5000); //max speed 65
+   
+   pros::delay(500);
+
+   chassis.moveToPoint(40, 25, 1500, {.forwards = false}); //max speed 65
+   chassis.turnToHeading(0, 500);
+
+   //wall stake 2
+   chassis.moveToPose(60, 53, 90, 5000);
+   
+   pros::delay(1500);
    lift.setPosition(1);
    intake.disableAntiStall();
    pros::delay(1500);
    intake.stop();
    lift.setPosition(4);
    pros::delay(1000);
+   chassis.moveToPoint(50, 50, 2000, {.forwards = false});
+   //chassis.turnToHeading(90, 1000);
+   chassis.turnToHeading(180, 500);
    lift.setPosition(0);
-
-   chassis.setPose(-64, 58.5, 270); //reset
+   intake.autoRun();
    intake.enableAntiStall();
-   intake.autoRun();
-   chassis.moveToPose(-50, 58.5, 270, 2000, {.forwards = false});
-   chassis.turnToHeading(180, 1000);
-   chassis.moveToPoint(-52, -9, 5000, {.maxSpeed = 45});
-   pros::delay(1000);
 
-   chassis.moveToPoint(-42, 5, 5000, {.forwards = false, .maxSpeed = 55});
-   chassis.turnToHeading(270, 1000);
-   chassis.moveToPoint(-67, 5, 5000, {.maxSpeed = 60});
-   pros::delay(1000);
-
-   chassis.moveToPoint(-42, 5, 5000, {.forwards = false, .maxSpeed = 55});
-   chassis.turnToHeading(45, 1000);
-   chassis.moveToPoint(-64, -5, 5000, {.forwards = false, .maxSpeed = 70});
-   pros::delay(1000);
-   clamp.toggle();
-   intake.stop();
-   conveyorMotor.move_relative(-100, -600);
-   pros::delay(300);
-   chassis.moveToPoint(-42, 5, 5000, {.maxSpeed = 70});
-   chassis.turnToHeading(270, 1000);
-
-
-   chassis.moveToPose(27, 5.7, 270, 3000, {.forwards = false, .maxSpeed = 70});
-   pros::delay(2000);
-   clamp.toggle();
-   pros::delay(300);
-   chassis.turnToHeading(0, 1000);
-   intake.autoRun();
-   chassis.moveToPoint(18, 28, 5000, {.maxSpeed = 65});
-   pros::delay(500);
-   chassis.turnToHeading(90, 1000);
-   chassis.moveToPoint(50, 31, 5000, {.maxSpeed = 65});
-   
-   pros::delay(500);
-
-   chassis.moveToPoint(40, 25, 5000, {.forwards = false, .maxSpeed = 65});
-   chassis.turnToHeading(0, 1000);
-   chassis.moveToPoint(52, 60, 5000, {.maxSpeed = 65});
-   chassis.turnToHeading(90, 1000);
-   chassis.turnToHeading(180, 1000);
-   chassis.moveToPoint(47, -9, 5000, {.maxSpeed = 65});
+   //2 rinfs
+   chassis.moveToPoint(46, -13, 2000, {.maxSpeed = 75}); //max speed 65
 
    chassis.moveToPoint(40, 6, 3000, {.forwards = false});
-   chassis.turnToHeading(90, 1000);
-   chassis.moveToPoint(60, 6, 3000, {.maxSpeed = 65});
-   pros::delay(1000);
+   //chassis.turnToHeading(90, 1000);
 
-   chassis.moveToPoint(40, 6, 3000, {.forwards = false});
+   //1 ring
+   chassis.moveToPoint(65, 6, 3000); //max speed 65
 
+   chassis.moveToPoint(50, 6, 3000, {.forwards = false});
+
+//cornering
    chassis.turnToHeading(315, 1000);
-   chassis.moveToPoint(60, -15, 5000, {.forwards = false});
+   chassis.moveToPoint(60, -15, 2000, {.forwards = false});
    pros::delay(500);
    clamp.toggle();
    pros::delay(300);
@@ -424,19 +458,25 @@ void Autonomous::auton7(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 }
 
 void Autonomous::auton8(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   //autonomous 8 --> red right goal
-   
-   chassis.setPose(0, 0, 180);
-   chassis.moveToPoint(0, 10, 5000, {.forwards = false});
+   //autonomous 8 --> red elims rushes
+
+   if (ringRush){
+      //ring rush autonomous RED
+   }
+   else {
+      //goal rush autonomous RED
+   }
 
 }
 
 void Autonomous::auton9(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   //autonomous 9 --> blue leave
-   
-   chassis.setPose(0, 0, 180);
-   pros::delay(5000);
-   chassis.moveToPoint(0, 10, 5000, {.forwards = false});
+   //autonomous 9 --> blue elims rushes
+   if (ringRush){
+      //ring rush autonomous BLUE
+   }
+   else {
+      //goal rush autonomous BLUE
+   }
 
 }
 
@@ -466,11 +506,11 @@ void Autonomous::autonMove(Intake &intake, Clamp &clamp, Doinker &doinker, Lift 
       auton7(intake, clamp, doinker, lift);
       Autonomous::allianceColor = std::string("red");
       break;
-   case redLeave:
+   case redElims:
       auton8(intake, clamp, doinker, lift);
       Autonomous::allianceColor = std::string("red");
       break;
-   case blueLeave:
+   case blueElims:
       auton9(intake, clamp, doinker, lift);
       Autonomous::allianceColor = std::string("blue");
       break;
@@ -500,8 +540,8 @@ void Autonomous::autonSwitcher(int autonNum){
       break;
    
    case 4:
-		Autonomous::autonName = "Red Leave";
-		Autonomous::auton	  = redLeave;
+		Autonomous::autonName = "Red Elims";
+		Autonomous::auton	  = redElims;
       Autonomous::allianceColor = std::string("red");
       break;
    
@@ -522,8 +562,8 @@ void Autonomous::autonSwitcher(int autonNum){
 		break;
    
    case -4:
-		Autonomous::autonName = "Blue Leave";
-		Autonomous::auton	  = blueLeave;
+		Autonomous::autonName = "Blue Elims";
+		Autonomous::auton	  = blueElims;
       Autonomous::allianceColor = std::string("blue");
 		break;
    

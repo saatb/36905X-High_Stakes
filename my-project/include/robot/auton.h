@@ -11,7 +11,7 @@ namespace Robot {
 
     class Autonomous{
         public:
-            enum routine { redLeft = 1, redRight = 2, redLeftAWP = 3, redLeave = 4, blueLeft = -1, blueRight = -2, blueRightAWP = -3, blueLeave = -4, skills = 0};
+            enum routine { redLeft = 1, redRight = 2, redLeftAWP = 3, redElims = 4, blueLeft = -1, blueRight = -2, blueRightAWP = -3, blueElims = -4, skills = 0};
             
             static routine auton;
 
