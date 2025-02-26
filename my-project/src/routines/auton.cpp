@@ -227,7 +227,7 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 //mogo
    chassis.moveToPoint(0, 4, 1000, {.forwards = false});
    chassis.turnToHeading(90, 500);
-   chassis.moveToPoint(-24, 5, 2000, {.forwards = false, .maxSpeed = 55});
+   chassis.moveToPoint(-25, 5, 2000, {.forwards = false, .maxSpeed = 55});
    lift.setPosition(0);
    pros::delay(950);
    clamp.toggle();
@@ -236,91 +236,95 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
 //start scoring rings
    chassis.turnToHeading(0, 500);
    intake.autoRun();
-   chassis.moveToPoint(-22, 28, 1500); //max speed 60
+   chassis.moveToPoint(-22, 30, 1500, {.minSpeed = 30, .earlyExitRange = 4}); //max speed 60, motion chain
 
+//second ring
    chassis.turnToHeading(315, 500);
    chassis.moveToPoint(-36, 48, 2000, {.minSpeed = 70, .earlyExitRange = 4});
-   chassis.moveToPoint(-44, 78, 2000);
+   chassis.moveToPoint(-44, 80, 2000);
 
 //wall stake 1
+   chassis.turnToHeading(180, 500, {.minSpeed = 20, .earlyExitRange = 5});
    lift.setPosition(1);
    intake.disableAntiStall();
-   chassis.turnToHeading(220, 500);
-   chassis.moveToPose(-64, 57, 270, 5000);
-   pros::delay(1000);
+   chassis.moveToPoint(-40, 56, 1000);
+   chassis.turnToHeading(270, 500);
+   chassis.moveToPoint(-64, 56, 3000);
+   pros::delay(200);
    conveyorMotor.move_velocity(0);   
-   pros::delay(500);
-   conveyorMotor.move_relative(-70, -600);
+   pros::delay(400);
+   conveyorMotor.move_relative(-50, -600);
+   lift.setPosition(4);
    pros::delay(400);
    intake.autoRun();
    intake.enableAntiStall();
-   lift.setPosition(4);
-   pros::delay(400);
 
-   chassis.setPose(-64, 57, 270); //reset
-   chassis.moveToPoint(-54, 58.5, 2000, {.forwards = false});
+   //chassis.setPose(-64, 57, 270); //reset
+   chassis.moveToPoint(-50, 56, 2000, {.forwards = false});
    pros::delay(500);
    lift.setPosition(0);
    chassis.turnToHeading(180, 500);
 
 //3 rings
-   chassis.moveToPoint(-52, 20, 2500, {.minSpeed = 65, .earlyExitRange = 4}); //motion chain
-   chassis.moveToPoint(-53, 0, 2000, {.maxSpeed = 55});
-   chassis.moveToPoint(-54, -9, 2000, {.maxSpeed = 40});
+   chassis.moveToPoint(-48, 20, 2500, {.minSpeed = 65, .earlyExitRange = 4}); //motion chain
+   chassis.moveToPoint(-48, 0, 1000, {.maxSpeed = 55});
+   chassis.moveToPoint(-48, -9, 700, {.maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1});
 
-   chassis.moveToPoint(-45, 5, 1000, {.forwards = false}); //back up
+   chassis.moveToPoint(-43, 5, 1000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2}); //back up
 
 //1 ring
-   chassis.moveToPoint(-65, 7, 1000); //max speed 60
+   chassis.moveToPoint(-65, 5, 1000, {.minSpeed = 30, .earlyExitRange = 2}); //max speed 60
 
 //cornering
-   chassis.moveToPoint(-55, 5, 5000, {.forwards = false}); //max speed 50
+   chassis.moveToPoint(-55, 5, 5000, {.forwards = false, .minSpeed = 20, .earlyExitRange = 2}); //max speed 50
    chassis.turnToHeading(45, 500);
    chassis.moveToPoint(-64, -5, 1000, {.forwards = false, .maxSpeed = 70});
    pros::delay(1000);
    clamp.toggle();
    intake.stop();
-   conveyorMotor.move_relative(-200, -600);
+   conveyorMotor.move_velocity(-600);
    pros::delay(300);
 
 //leave corner
-   chassis.moveToPoint(-42, 5, 5000, {.minSpeed = 70, .earlyExitRange = 4}); //motionchained
+   chassis.moveToPoint(-10, 13, 5000, {.minSpeed = 70, .earlyExitRange = 4}); //motionchained
 
 //mogo 2
-   chassis.moveToPose(21, 3.5, 270, 3000, {.forwards = false, .minSpeed = 70}); //max speed 70
-   pros::delay(1650);
+   chassis.moveToPoint(21, 13, 3000, {.forwards = false, .minSpeed = 60}); //max speed 70
+   pros::delay(750);
    clamp.toggle();
    pros::delay(300);
    intake.autoRun();
    
 //first ring close to mogo
-   chassis.moveToPoint(18, 28, 5000); //max speed 65
+   chassis.moveToPoint(22, 31, 2000, {.minSpeed = 20, .earlyExitRange = 2}); //max speed 65
 
 //ring under ladder
-   chassis.moveToPoint(-6, 50, 2000);
-   chassis.moveToPoint(18, 27, 2000, {.forwards = false});
+   chassis.moveToPoint(-3, 58, 2000); //-6, 55
+   chassis.moveToPoint(18, 35, 2000, {.forwards = false, .minSpeed = 20, .earlyExitRange = 3});
 
 //ring to right of first ring
    //chassis.turnToHeading(90, 1000);
-   chassis.moveToPoint(52, 25, 2000); //max speed 65
-   pros::delay(200);
+   chassis.moveToPoint(56, 43, 2000); //max speed 65
+   pros::delay(1000);
    lift.setPosition(1);
    intake.disableAntiStall();
 
-   chassis.moveToPoint(40, 25, 1500, {.forwards = false}); //max speed 65
+
+   chassis.moveToPoint(40, 40, 1000, {.forwards = false}); //max speed 65
    chassis.turnToHeading(0, 500);
 
    //wall stake 2
-   chassis.moveToPose(60, 49.7, 90, 3000);
-   pros::delay(1000);
+   chassis.moveToPoint(40, 69, 2000);
+   chassis.turnToHeading(90, 500);
+   chassis.moveToPoint(60, 69, 2000);
+   //chassis.moveToPose(60, 55.5, 90, 3500);
    conveyorMotor.move_velocity(0);
-   pros::delay(200);
-   conveyorMotor.move_relative(-70, -600);
-   pros::delay(900);
-   intake.autoRun();
+   pros::delay(500);
+   conveyorMotor.move_relative(-50, -600);
    lift.setPosition(4);
-   pros::delay(400);
-   chassis.moveToPoint(50, 49.7, 2000, {.forwards = false});
+   pros::delay(500);
+   intake.autoRun();
+   chassis.moveToPoint(55, 69, 2000, {.forwards = false});
    //chassis.turnToHeading(90, 1000);
    chassis.turnToHeading(180, 500);
    lift.setPosition(0);
@@ -328,37 +332,41 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    intake.enableAntiStall();
 
    //2 rinfs
-   chassis.moveToPoint(45, -13, 2000, {.maxSpeed = 75}); //max speed 65
+   chassis.moveToPoint(55, -13, 1700, {.maxSpeed = 75, .minSpeed = 20, .earlyExitRange = 4}); //max speed 65
 
-   chassis.moveToPoint(40, 6, 1500, {.forwards = false});
+   chassis.moveToPoint(45, 10, 1500, {.forwards = false, .minSpeed = 30, .earlyExitRange = 3});
    //chassis.turnToHeading(90, 1000);
 
    //1 ring
-   chassis.moveToPoint(65, 0, 1000); //max speed 65
+   chassis.moveToPoint(65, 12, 1000, {.minSpeed = 30, .earlyExitRange = 1}); //max speed 65
 
-   chassis.moveToPoint(50, 6, 1500, {.forwards = false});
+   chassis.moveToPoint(50, 12, 1500, {.forwards = false, .minSpeed = 20, .earlyExitRange = 4});
 
 //cornering
    chassis.turnToHeading(315, 500);
-   chassis.moveToPoint(60, -15, 1000, {.forwards = false});
+   chassis.moveToPoint(70, -7, 1000, {.forwards = false});
    pros::delay(500);
    clamp.toggle();
+   intake.stop();
+   conveyorMotor.move_velocity(-600);
    pros::delay(300);
 
 //leave corner, prep lady brown for alliance stake
    //chassis.moveToPoint(40, 6, 1000, {.minSpeed = 70, .earlyExitRange = 4});
-   chassis.moveToPoint(42, 78, 3000);
+   chassis.moveToPoint(43, 85, 3000);
+   intake.autoRun();
+   pros::delay(2000);
    lift.setPosition(1);
    intake.disableAntiStall();
    
 //pick up second ring
    chassis.turnToHeading(270, 500);
-   chassis.moveToPoint(10, 78, 1500);
+   chassis.moveToPoint(20, 80, 1500);
 
 //mogo 3
    chassis.turnToHeading(180, 500);
-   chassis.moveToPose(-6, 102, 145, 2000, {.forwards = false});
-   pros::delay(1500);
+   chassis.moveToPoint(-6, 102, 2000, {.forwards = false});
+   pros::delay(1000);
    clamp.toggle();
    //pros::delay(300);
 
@@ -370,7 +378,7 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    chassis.moveToPose(-6, 127, 0, 2000, {.forwards = false, .maxSpeed = 65});
    conveyorMotor.move_velocity(0);
    pros::delay(200);
-   conveyorMotor.move_relative(-70, -600);
+   conveyorMotor.move_relative(-50, -600);
    pros::delay(400);
    intake.autoRun();
    lift.setPosition(4);
@@ -382,30 +390,33 @@ void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &li
    lift.setPosition(0);
 
 //solo ring on mogo
-   chassis.moveToPoint(-36, 84, 2000);
+   chassis.moveToPoint(-28, 95, 2000, {.minSpeed = 20, .earlyExitRange = 4});
 
 //first ring in 3
-   chassis.moveToPoint(-52, 120, 2000);
+   chassis.moveToPoint(-52, 115, 2000);
    chassis.turnToHeading(270, 500);
 
 //second ring in 3
-   chassis.moveToPoint(-63, 120, 2000);
-   chassis.moveToPoint(-56, 120, 1000, {.forwards = false});
+   chassis.moveToPoint(-63, 117, 2000);
+   chassis.moveToPoint(-56, 117, 1000, {.forwards = false});
 
 //last ring in 3
-   chassis.moveToPoint(-53, 130, 2000);
+//   chassis.moveToPoint(-53, 130, 2000);
 
 //cornering
-   chassis.moveToPoint(-52, 120, 1000, {.forwards = false});
+//   chassis.moveToPoint(-52, 120, 1000, {.forwards = false});
    doinker.toggle();
-   chassis.moveToPoint(-56, 126, 1000);
+   chassis.moveToPoint(-63, 126, 1000);
    chassis.turnToHeading(220, 500);
    chassis.turnToHeading(120, 500);
    pros::delay(1000);
    clamp.toggle();
-   chassis.moveToPoint(-60, 130, 1000, {.forwards = false});
+   chassis.moveToPoint(-66, 130, 1000, {.forwards = false});
+   intake.autoRun(-1);
 
 //last mogo in corner
+
+   chassis.moveToPoint(0, 120, 2000);
 }
 
 void Autonomous::auton6(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
