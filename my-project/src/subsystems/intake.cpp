@@ -100,7 +100,7 @@ void antiStall()
 conveyorMotor.move_velocity(-600);
 pros::delay(200);
 conveyorMotor.move_velocity(600);
-intakeMotor.move_velocity(600);
+//intakeMotor.move_velocity(600);
 }
 
 pros::Task colorSortingTask(
