@@ -54,7 +54,7 @@ void initialize() {
 	//calibrate chassis
     chassis.calibrate();
 
-	//screen.selector.selector();
+	screen.selector.selector();
 
 	//zero chassis pose
 	chassis.setPose(0,0,0);
@@ -67,7 +67,7 @@ void initialize() {
 	//config optical sensor
 	optical.set_integration_time(40);
 	optical.set_led_pwm(100);
-
+/*
 	pros::lcd::initialize();
 	pros::Task screen_task([&](){
 		while (true){
@@ -79,7 +79,7 @@ void initialize() {
 			pros::lcd::print(5, "Distance: %d", distance.get());
 			pros::delay(40);
 		}
-	});
+	});*/
 }
 
 /**
@@ -88,7 +88,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	//screen.selector.selector();
+	screen.selector.selector();
 }
 
 /**
@@ -101,7 +101,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-	//screen.selector.selector();
+	screen.selector.selector();
 }
 
 /**

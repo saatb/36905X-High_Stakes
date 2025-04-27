@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "competition",
+    "project_name": "red",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -300,9 +300,9 @@
       }
     },
     "upload_options": {
-      "description": "competition",
+      "description": "red",
       "icon": "pros",
-      "slot": 1
+      "slot": 2
     },
     "use_early_access": false
   }
