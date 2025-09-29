@@ -70,6 +70,7 @@ void initialize() {
 /*
 	pros::lcd::initialize();
 	pros::Task screen_task([&](){
+  
 		while (true){
 			pros::lcd::print(0, "X: %f", chassis.getPose().x);
 			pros::lcd::print(1, "Y: %f", chassis.getPose().y);
