@@ -15,603 +15,825 @@ using namespace Robot::Global;
 using namespace lemlib;
 
 
-Autonomous::routine Autonomous::auton = redLeft;
+Autonomous::routine Autonomous::auton = redElims;
 std::string				  Autonomous::autonName;
 std::string Autonomous::allianceColor = "red";
 
-bool quals = true;
-bool goalRush = false;
-
+bool quals = false;
+bool ringRush = true;
+bool blueCorner = true;
+bool redCenter = false;
 /*
 NOTES:
    - imu is mounted horizontally, so x and y are FLIPPED from path.jerryio
-   - towards negative corner is NEGATIVE x, toward positive corner is POSITIVE x (opposite of path.jerryio)
+   - towards negative corner is NEGATIVE x, toward positive corner is POSITIVE x (opposite as path.jerryio)
    - towards blue alliance is POSITIVE y, towards red alliance is NEGATIVE y (same as path.jerryio)
-   - RED to BLUE transformation is inverting y-values (might also need to change headings)
+   - RED to BLUE transformation is inverting y-values and 180 - original angle
 */
 
-void Autonomous::auton1(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   //controller.print(0, 0, "br, q: %d", quals);
-    // autonomous 1 --> blueRight (single mogo)
-    // CHANGED FROM redLeft by inverting y-values (neg to pos) and theta - 180
+void Autonomous::auton1(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //blueright DONE - maybe elims mods
+   //blueRight
+   //score alliance stake
+   chassis.setPose(0, 0, 180-140);
+   lift.setPosition(2);
+   chassis.moveToPoint(3, 6, 5000);
+   lift.setPosition(3);
 
-    //line up straight back from mogo
-    //picks up mogo, then scores preload + adjacent ring, then scores both midline rings
-    //then touches ladder with intake
+   //move to goal and clamp
+   chassis.moveToPoint(-14, -30, 5000, {.forwards = false, .maxSpeed = 65});
+   pros::delay(1150);
+   clamp.toggle();
+   lift.setPosition(0);
+   intake.autoRun(1, 200, 600);
 
-    //release first stage
-    //intake.autoRun(-1, 600);
-    //pros::delay(150);
-    //intake.stop();
-
-    //set pose
-    chassis.setPose(-8, 58.144, (180-215));
-
-    //move to mogo, motion chained
-    //chassis.moveToPoint(22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-    chassis.moveToPose(25.946, 32.919, (180-270), 5000, {.forwards = false, .minSpeed = 30/*.maxSpeed = 63*/});
-    pros::delay(1850);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(500);
-
-    
-    //move to single stack adjacent to mogo 
-    chassis.moveToPoint(-0.296, 29.919,5000); // x-coord from jerry was 38.596
-    intake.autoRun(1, 600);
-    //chassis.moveToPoint(4.296, 40.919,5000, {.forwards = false});
-    
+   //turn towards rings
+   chassis.turnToHeading(180-320, 1000);
    
-    /*
-    slowly move to leftmost stack of rings on midline
-    chassis.moveToPose(-6.296, -18.919, 0, 3000);
+   //first ring
+   chassis.moveToPoint(-30, -45, 2000, {.maxSpeed = 60});
+   //second ring
+   chassis.moveToPose(-48, -45.5, 180-270, 2000, {.maxSpeed = 60});
+   pros::delay(1000);
+   //move back
+   chassis.moveToPoint(-30, -40, 2000, {.forwards = false, .minSpeed = 10, .earlyExitRange = 4});
+   chassis.moveToPoint(-20, -30, 2000, {.forwards = false});
+   pros::delay(500);
 
-    back up to prepare for second stack of rings
-    chassis.moveToPoint(0, -30.919, 2000, {.forwards = false});
-    */
+   //third ring
+   chassis.moveToPoint(-35, -30, 2000, {.maxSpeed = 60});
 
-    //move to first stack
-    chassis.moveToPose(-1.296, 5, (180-5), 3500, {.minSpeed = 45});
+   pros::delay(2500);
 
-    //back up after scoring
-    chassis.moveToPoint(-8.296, 24.919, 5000, {.forwards = false});
-
-    //move to second stack
-    chassis.moveToPose(6, 8, (180-5), 3500, {.minSpeed = 45});
-
-    //back up after scoring
-    chassis.moveToPoint(3.296, 24.919, 5000, {.forwards = false});
-
-    chassis.moveToPose(42.5, 45, (180-40), 5000);
-    }
-
-void Autonomous::auton2(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   //controller.print(0, 0, "rl, q: %d", quals);
-   //DONE
-   //autonomous 2 --> redLeft (single mogo)
-
-    //line up straight back from mogo
-    //picks up mogo, then scores preload + adjacent ring, then scores both midline rings
-    //then touches ladder with intake
-
-    //release first stage
-    //intake.autoRun(-1, 600);
-    //pros::delay(150);
-    //intake.stop();
-
-    //set pose
-    chassis.setPose(-8, -58.144, 215);
-
-    //move to mogo, motion chained
-    //chassis.moveToPoint(22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-    chassis.moveToPose(25.946, -31.919, 270, 5000, {.forwards = false, .minSpeed = 30/*.maxSpeed = 63*/});
-    pros::delay(1850);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(500);
-
-    
-    //move to single stack adjacent to mogo 
-    chassis.moveToPoint(-1, -29.919,5000); // x-coord from jerry was 38.596
-    intake.autoRun(1, 600);
-    //chassis.moveToPoint(4.296, 40.919,5000, {.forwards = false});
-    
+   chassis.moveToPoint(-3, -38, 5000, {.forwards = false, .maxSpeed = 50});
+   conveyorMotor.move_velocity(0);
+   lift.setPosition(2);
    
-    /*
-    slowly move to leftmost stack of rings on midline
-    chassis.moveToPose(-6.296, -18.919, 0, 3000);
+   }
 
-    back up to prepare for second stack of rings
-    chassis.moveToPoint(0, -30.919, 2000, {.forwards = false});
-    */
+void Autonomous::auton2(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //redleft DONE - maybe elims mods
+   //redLeft
+   //score alliance stake
+   chassis.setPose(0, 0, 140);
+  /* lift.setPosition(2);
+   chassis.moveToPoint(3, -6, 5000);
+   lift.setPosition(3);
+   pros::delay(400);*/
 
-    //move to first stack
-    chassis.moveToPose(-5.5, -4.2, 5, 3500, {.minSpeed = 45});
+   //move to goal and clamp
+   chassis.moveToPoint(-14, 30, 5000, {.forwards = false, .maxSpeed = 65});
+   pros::delay(1150);
+   clamp.toggle();
+   lift.setPosition(0);
+   intake.autoRun(1, 200, 600);
 
-    //back up after scoring
-    chassis.moveToPoint(-8.296, -24.919, 5000, {.forwards = false});
+   //turn towards rings
+   chassis.turnToHeading(320, 1000);
+   
+   //first ring
+   chassis.moveToPoint(-32, 43.5, 2000, {.maxSpeed = 80, .minSpeed = 10, .earlyExitRange = 2});
+   //second ring
+   chassis.moveToPose(-52, 43.5, 270, 2000, {.maxSpeed = 80});
+   pros::delay(1000);
+   //move back
+   chassis.moveToPoint(-30, 40, 2000, {.forwards = false, .minSpeed = 10, .earlyExitRange = 4});
+   chassis.moveToPoint(-20, 30, 2000, {.forwards = false, .maxSpeed = 80});
+   pros::delay(500);
 
-    //move to second stack
-    chassis.moveToPose(1, -9, 5, 3500, {.minSpeed = 45});
+   //third ring
+   chassis.moveToPoint(-37, 30, 2000, {.maxSpeed = 60});
 
-    //back up after scoring
-    chassis.moveToPoint(3.296, -24.919, 5000, {.forwards = false});
-    pros::delay(2000);
+   pros::delay(2500);
 
-    chassis.moveToPoint(40.5, -55, 5000, {.maxSpeed = 40});  
+   chassis.moveToPoint(-3, 40, 5000, {.forwards = false, .maxSpeed = 50});
+   lift.setPosition(2);
+   /*
+   chassis.setPose(0, 0, 140);
+   lift.setPosition(2);
+   chassis.moveToPoint(3, -6, 5000);
+   lift.setPosition(3);
+
+   //move to goal and clamp
+   chassis.moveToPoint(-14, 30, 5000, {.forwards = false, .maxSpeed = 65});
+   pros::delay(1050);
+   clamp.toggle();
+   lift.setPosition(0);
+   intake.autoRun(1, 200, 600);
+
+   chassis.turnToHeading(320, 1000);
+   
+   chassis.moveToPoint(-30, 45, 2000, {.maxSpeed = 60});
+   chassis.moveToPose(-48, 45, 270, 2000, {.maxSpeed = 60});
+   pros::delay(1000);
+   chassis.moveToPoint(-20, 30, 2000, {.forwards = false});
+   pros::delay(500);
+   chassis.moveToPoint(-35, 30, 2000, {.maxSpeed = 60});
+
+   pros::delay(2500);
+
+   chassis.moveToPoint(-3, 42, 5000, {.forwards = false, .maxSpeed = 50});
+   lift.setPosition(2);
+   */
 
 }
 
-void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   //controller.print(0, 0, "rr, q: %d, gr: %d", quals, goalRush);
-   //autonomous 3 redRight --> goal rush or safe two ring
-   // safe two ring touches ladder in quals, moves near pos corner in elims
+void Autonomous::auton3(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //redright DONE
+   //redRight
 
-   //release first stage
-   //intake.autoRun(-1, 600);
-   //pros::delay(150);
-   //intake.stop();
+   chassis.setPose(0, 0, 220);
+   lift.setPosition(2);
+   chassis.moveToPoint(-3, -6, 5000);
+   lift.setPosition(3);
 
-   if (goalRush == false){
-    //set pose
-    chassis.setPose(-34.946, -54.144, 225);
-    chassis.moveToPoint(-39.946, -59.3, 5000);
-    
-    lift.setPosition(3);
+   //move to goal and clamp
+   chassis.moveToPoint(14.3, 30, 5000, {.forwards = false, .maxSpeed = 65});
+   pros::delay(1100);
+   lift.setPosition(0);
+   clamp.toggle();
+   intake.autoRun(1, 200, 600);
 
-    chassis.moveToPoint(-30, -50, 1500, {.forwards = false});
-    chassis.moveToPose(-60, -44.8, 270, 5000);  
-    lift.setPosition(0);
-    //double now = pros::millis(); 
-    while (optical.get_hue() > 35 /*&& (pros::millis() - now) > 5000*/) {
-      intake.autoRun(1, 600, 400); 
-    }
-    intake.stop();
+   chassis.moveToPoint(40, 30, 5000, {.maxSpeed = 65});
 
-    //move to mogo, motion chained
-    //chassis.moveToPoint(-30.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-    //chassis.moveToPose(-22.946, -25.919, 270, 5000, {.forwards = false, .maxSpeed = 80});
-    chassis.moveToPose(-16.946, -22, 225, 5000, {.forwards = false, .maxSpeed = 80});
-    pros::delay(3000);
+   chassis.moveToPoint(38, 30, 1000, {.forwards = false});
 
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(300);
+   pros::delay(1000);
+/*
+   pros::delay(1000);
 
-    //start scoring rings
-    intake.autoRun(1, 600);
-    pros::delay(1000);
+   //clear corner
 
-    //move to single stack adjacent to mogo 
-    chassis.moveToPoint(-0.296, -26.5,5000, {.maxSpeed = 40}); // x-coord from jerry was 38.596
+   chassis.moveToPoint(38, 30, 5000, {.forwards = false});
+*/  
 
-    //allow time to score
-    pros::delay(2500);
-
-    if (quals == true){
-      //turn around to drop mogo
-      //chassis.turnToHeading(270, 1500);
-      //pros::delay(500);
-
-      //stop intake and drop mogo
-      //intake.stop();
-      //clamp.toggle();
-
-      //go and touch ladder
-      chassis.moveToPoint(-36, -22.19, 5000, {.maxSpeed = 50});
-    }
-    else {
-    //move to pos corner
-    chassis.moveToPoint(0, -32.919, 6000, {.forwards = false});
-    intake.stop();
-    }
+   if (redCenter){ //grab center ring
+         chassis.moveToPose(1, 47, 313, 2500);
+         pros::delay(800);
+         intakeMotor.move_velocity(0);
+         doinker.toggle();
+         //chassis.turnToHeading(290, 1000);
+         chassis.moveToPoint(22, 27, 5000, {.forwards = false});
+         //chassis.turnToHeading(350, 1000);
+         pros::delay(1000);
+         doinker.toggle();
+         intake.autoRun();
+         pros::delay(200);
+         if (quals){
+         chassis.moveToPoint(16, 46.5, 4000, {.maxSpeed = 65});
+         }
+         else if (!quals){
+            //TODO: pick up ring, clamp mid goal and score
+            conveyorMotor.move_velocity(0);
+            clamp.toggle();
+            chassis.moveToPoint(20, 38, 2000);
+            chassis.moveToPose(40, 47, 180, 2000, {.forwards = false});
+            pros::delay(2500);
+            clamp.toggle();
+            conveyorMotor.move_velocity(600);
+            pros::delay(300);
+            chassis.moveToPoint(40, 38, 2000);
+         }
 
    }
+   else { //corner clear
+      chassis.moveToPoint(54, -6, 1700, {.maxSpeed = 65});
 
-   else {
-   //set pose
-   chassis.setPose(-35.804, -58.943, 180);
+      doinker.toggle();   
+      
+      chassis.turnToHeading(40, 2000);
+      
+      pros::delay(1500);
+      
+      doinker.toggle();
+      
+      chassis.moveToPose(38, 18, 180, 2000, {.maxSpeed = 80});
+   
+      if (quals){ //touch ladder
+      lift.setPosition(2);
+      chassis.moveToPoint(3, 38, 5000, {.forwards = false, .maxSpeed = 50});}
+   
+      else if (!quals) {   //prep for third goal
+      //start
+      chassis.turnToHeading(0, 1000);
 
-   //rush goal, motion chained
-   chassis.moveToPoint(-35.804, -25.348, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-   chassis.moveToPose(-24.804, -16.398, 215, 2500, {.forwards = false, .maxSpeed = 63});
-   pros::delay(1750);
+      pros::delay(2000);
 
-   //clamp goal
-   clamp.toggle();
-   pros::delay(300);
-
-   //swing to stack of rings and pick up
-   chassis.swingToHeading(135, DriveSide::LEFT, 1500);
-   intake.autoRun(1, 600);
-
-   pros::delay(3000);
-
-   //stop intake since we're done picking up rings
-   intakeMotor.move_velocity(0);
-
-   if (quals == true){
-      //move behind other mogo
-      chassis.moveToPose(-47.804, -46.943, 270, 5000);
-
-      //drop mogo and stop conveyor
       intake.stop();
+
       clamp.toggle();
 
-      //go and touch ladder
-      chassis.moveToPoint(-60, -32.19, 5000);
-   }
-   else{
-      //move to pos corner BACKWARDS
-      chassis.moveToPoint(-11.804, -58.943, 5000, {.forwards = false});
+      pros::delay(500);
 
-      //stop intake
-      intake.stop();
-   }
-   }
+      chassis.turnToHeading(180, 1000);
+
+      chassis.moveToPoint(40, 36, 5000, {.forwards = false, .maxSpeed = 65});
+      }
 }
 
-void Autonomous::auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-//controller.print(0, 0, "bl, q: %d, gr: %d", quals, goalRush);
+}
 
-   //TODO: make autonomous 4 blueLeft --> goal rush or safe two ring
-   // safe two ring touches ladder in quals, moves near pos corner in elims
-   //CHANGED from redRight by inverting y-values (neg to pos) and theta - 180 for commands
+void Autonomous::auton4(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //blueleft DONE
+   
+   //blueLeft
+   chassis.setPose(0, 0, 180-220);
+   lift.setPosition(2);
+   chassis.moveToPoint(-3, 6, 5000);
+   lift.setPosition(3);
 
-   //release first stage
-   //intake.autoRun(-1, 600);
-   //pros::delay(150);
-   //intake.stop();
+   pros::delay(800);
 
-   if (goalRush == false){
-    //set pose
-    chassis.setPose(-34.946, 54.144, 180 - 225);
-    chassis.moveToPoint(-39.946, 61, 5000);
-    
-    lift.setPosition(3);
-
-    chassis.moveToPoint(-30, 50, 1500, {.forwards = false});
-    chassis.moveToPose(-60, 44.8, 180 - 270, 5000);
-    lift.setPosition(0);
-    //double now = pros::millis();   
-    while (optical.get_hue() < 100 /*& (pros::millis() - now) > 5000*/) {
-      intake.autoRun(1, 600); 
-    }
-    intake.stop();
-
-    //move to mogo, motion chained
-    //chassis.moveToPoint(-30.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-    //chassis.moveToPose(-22.946, -25.919, 270, 5000, {.forwards = false, .maxSpeed = 80});
-    chassis.moveToPose(-15.946, 23.919, 180 - 225, 5000, {.forwards = false, .maxSpeed = 80});
-    
-    pros::delay(3000);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(300);
-
-    //start scoring rings
-    intake.autoRun(1, 600);
-    pros::delay(1000);
-
-    //move to single stack adjacent to mogo 
-    chassis.moveToPoint(-3.296, 27,5000); // x-coord from jerry was 38.596
-
-    //allow time to score
-    pros::delay(2500);
-
-    if (quals == true){
-      //turn around to drop mogo
-      //chassis.turnToHeading(270, 1500);
-      //pros::delay(500);
-
-      //stop intake and drop mogo
-      //intake.stop();
-      //clamp.toggle();
-
-      //go and touch ladder
-      chassis.moveToPoint(-38, 21.19, 5000, {.maxSpeed = 50});
-    }
-    else {
-    //move to pos corner
-    chassis.moveToPoint(0, 32.919, 6000, {.forwards = false});
-    intake.stop();
-    }
-
-   }
-
-   else {
-   //set pose
-   chassis.setPose(-35.804, 58.943, 0);
-
-   //rush goal, motion chained
-   chassis.moveToPoint(-35.804, 25.348, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-   chassis.moveToPose(-24.804, 14.398, (180 - 215), 2500, {.forwards = false, .maxSpeed = 63});
-   pros::delay(1750);
-
-   //clamp goal
+   //move to goal and clamp
+   chassis.moveToPoint(14, -30, 5000, {.forwards = false, .maxSpeed = 65});
+   pros::delay(1150);
+   lift.setPosition(0);
    clamp.toggle();
-   pros::delay(300);
+   intake.autoRun(1, 200, 600);
 
-   //swing to stack of rings and pick up
-   chassis.swingToHeading((180-135), DriveSide::RIGHT, 1500);
-   intake.autoRun(1, 600);
+   chassis.moveToPoint(40, -30, 5000, {.maxSpeed = 65});
 
-   pros::delay(3000);
+   pros::delay(1000);
 
-   //stop intake since we're done picking up rings
+   chassis.moveToPoint(36, -30, 5000, {.forwards = false});
+
+if (blueCorner){
+   //clear corner
+
+   chassis.moveToPoint(52, 4, 3000, {.maxSpeed = 65}); //y = 4, ms = 65
+   
+   pros::delay(800);
+
    intakeMotor.move_velocity(0);
 
-   if (quals == true){
-      //move behind other mogo
-      chassis.moveToPose(-47.804, 46.943, (180 - 270), 5000);
+   doinker.toggle();
+   pros::delay(300);
+   clamp.toggle();
 
-      //drop mogo and stop conveyor
-      intake.stop();
-      clamp.toggle();
+   conveyorMotor.move_velocity(0);   
 
-      //go and touch ladder
-      chassis.moveToPose(-59, 36.19, 45 - 180,5000);
-   }
-   else if (quals == false){
-      //move to pos corner BACKWARDS
-      chassis.moveToPoint(-11.804, 58.943, 5000, {.forwards = false});
+   chassis.turnToHeading(180-220, 2000);
 
-      //stop intake
-      intake.stop();
-   }
-   }   
-}
+   pros::delay(500);
 
-void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   bool allianceStake = false;
-   //controller.print(0, 0, "skills, as: %d", allianceStake);
-   //autonomous 5 --> skills 
-   // starts right behind neg mogo --> corner, 1 2 3 4
-   //release first stage
-   //intake.autoRun(-1, 600);
-   //pros::delay(300);
-   //intake.stop();
+   doinker.toggle();
 
-   chassis.setPose(12, 2, 0);
-   intake.autoRun(1, 600);
+   intake.autoRun(1, 200, 0);
+   
+   pros::delay(300);
+
+   chassis.moveToPoint(48, 14, 2000);
+   
    pros::delay(1000);
-   chassis.moveToPoint(12, 5, 5000, {.forwards = false});
-   chassis.moveToPose(-24, 12.3, 90, 5000, {.forwards = false, .minSpeed = 25});
-   pros::delay(1800);
-   clamp.toggle();
-   pros::delay(500);
-   intake.autoRun(1, 600);
-   pros::delay(500);
+   if (quals){
+      lift.setPosition(2);
+      chassis.moveToPoint(5, -38, 5000, {.forwards = false, .maxSpeed = 50});
+   }
+   else if (!quals) {   
+   //start
+   chassis.moveToPose(28, -24, 180-180, 3000, {.forwards = false, .minSpeed = 20, .earlyExitRange = 2});
 
-   //move to nearest ring
-   chassis.moveToPoint(-20.497, 34.635, 5000, {.maxSpeed = 65});
-   pros::delay(500);
-
-   //move to ring on centerline
-   chassis.moveToPoint(-55, 61.176, 5000, {.maxSpeed = 65}); 
-   pros::delay(500);
-
-   //back up
-   chassis.moveToPoint(-50, 55.176, 5000, {.forwards = false, .maxSpeed = 65}); 
-
-   //move to third ring
-   chassis.moveToPoint(-48.782, 35.937, 5000, {.maxSpeed = 65});
-   pros::delay(500); 
-
-   //move to first ring in group of 3
-   chassis.moveToPoint(-42, 11.954, 5000, {.maxSpeed = 65});
-   pros::delay(500);
-
-   //move to alliance-wall-side ring
-   chassis.moveToPoint(-44, 4, 5000, {.maxSpeed = 65});
-   pros::delay(500);
-
-   //move to neutral-wall-side ring
-   chassis.moveToPoint(-58,11.582, 5000, {.maxSpeed = 65});
-   pros::delay(500);
-
-   //move away from corner
-   //chassis.moveToPoint(-55, 27.943, 5000, {.maxSpeed = 65});
-   //pros::delay(2500);
-
-   //move into corner
-   chassis.moveToPoint(-61.5, 1, 5000, {.forwards = false});
-   pros::delay(1500);
-   clamp.toggle();
-   intake.stop();
-   pros::delay(1000);
-   intake.autoRun(-1, 600);
-   chassis.moveToPoint(-59.5, 10, 5000);
-
-   chassis.moveToPose((36.5), 3, 270, 5000, {.forwards = false, .maxSpeed = 80, .earlyExitRange = 4});
-   //chassis.moveToPose((-59.5 + 96), 11, 90, 5000, {.forwards = false, .maxSpeed = 63});
-   pros::delay(3500);
-   clamp.toggle();
-   pros::delay(500);
-   intake.autoRun(1, 600);
-   chassis.moveToPoint(48.5, 5, 5000);
-   pros::delay(3500);
-   chassis.moveToPoint(64.5, -4, 5000, {.forwards = false});
+   chassis.moveToPose(38, -45, 180-180, 2500, {.forwards = false});
+   
    pros::delay(2000);
-   intake.stop();
    clamp.toggle();
+   pros::delay(300);
+   intake.autoRun();
+   }
+}
+/* middle ring doesnt work :(
+   chassis.turnToHeading(270, 500);
 
+   chassis.moveToPose(7.5, -44, 200, 2200, {.maxSpeed = 80});
+
+   doinker.toggle();
+
+   intake.stop();
+
+   chassis.turnToHeading(245, 500);
+
+   chassis.turnToHeading(210, 500);
+
+   chassis.moveToPose(7.5, -38, 210, 1000, {.forwards = false});
+
+   chassis.moveToPose(9, -52, 210, 3000);
+*/
 }
 
-void Autonomous::auton6(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
+void Autonomous::auton5(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //skills
+   chassis.setPose(0, -1, 180);
+   //intake.disableAutoSort();
+
+//score alliance stake
+   lift.setPosition(1);
+   intake.disableAntiStall();
+   intake.autoRun();
+   pros::delay(500);
+   intake.stop();
+   lift.setPosition(4);
+   pros::delay(500);
+
+//mogo
+   chassis.moveToPoint(0, 6, 1000, {.forwards = false});
+   chassis.turnToHeading(90, 500);
+   chassis.moveToPoint(-25, 6, 2000, {.forwards = false, .maxSpeed = 55});
+   lift.setPosition(0);
+   pros::delay(950);
+   clamp.toggle();
+   intake.enableAntiStall();
+
+//start scoring rings
+   chassis.turnToHeading(0, 500);
+   intake.autoRun();
+   chassis.moveToPoint(-22, 30, 1500, {.minSpeed = 30, .earlyExitRange = 4}); //max speed 60, motion chain
+
+//second ring
+   chassis.turnToHeading(315, 500);
+   chassis.moveToPoint(-36, 48, 2000, {.minSpeed = 70, .earlyExitRange = 4});
+   chassis.moveToPoint(-44, 80, 2000);
+
+//wall stake 1
+   chassis.turnToHeading(180, 500, {.minSpeed = 20, .earlyExitRange = 5});
+   lift.setPosition(1);
+   intake.disableAntiStall();
+   chassis.moveToPoint(-37, 56, 1000);
+   chassis.turnToHeading(270, 500);
+   chassis.moveToPoint(-64, 56, 2000);
+   pros::delay(200);
+   conveyorMotor.move_velocity(0);   
+   pros::delay(400);
+   conveyorMotor.move_relative(-50, -600);
+   lift.setPosition(4);
+   pros::delay(400);
+   intake.autoRun();
+   intake.enableAntiStall();
+
+   //chassis.setPose(-64, 57, 270); //reset
+   chassis.moveToPoint(-50, 56, 2000, {.forwards = false});
+   pros::delay(500);
+   lift.setPosition(0);
+   chassis.turnToHeading(180, 500);
+
+//3 rings
+   chassis.moveToPoint(-48, 20, 2500, {.minSpeed = 65, .earlyExitRange = 4}); //motion chain
+   chassis.moveToPoint(-48, 0, 1000, {.maxSpeed = 55});
+   chassis.moveToPoint(-48, -9, 700, {.maxSpeed = 40, .minSpeed = 20, .earlyExitRange = 1});
+
+   chassis.moveToPoint(-43, 5, 1000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2}); //back up
+
+//1 ring
+   chassis.moveToPoint(-65, 5, 1000, {.minSpeed = 30, .earlyExitRange = 2}); //max speed 60
+
+//cornering
+   chassis.moveToPoint(-55, 5, 5000, {.forwards = false, .minSpeed = 20, .earlyExitRange = 2}); //max speed 50
+   chassis.turnToHeading(45, 500);
+   chassis.moveToPoint(-64, -5, 1000, {.forwards = false, .maxSpeed = 70});
+   pros::delay(1000);
+   clamp.toggle();
+   intake.stop();
+   conveyorMotor.move_velocity(-600);
+   pros::delay(300);
+   conveyorMotor.move_velocity(-600);
+
+//leave corner
+   chassis.moveToPoint(-10, 13, 5000, {.minSpeed = 70, .earlyExitRange = 4}); //motionchained
+
+
+//mogo 2
+   chassis.moveToPoint(21, 13, 3000, {.forwards = false, .minSpeed = 60}); //max speed 70
+   pros::delay(950);
+   clamp.toggle();
+   pros::delay(300);
+   intake.autoRun();
+   
+//first ring close to mogo
+   chassis.moveToPoint(24, 33, 2000, {.minSpeed = 20, .earlyExitRange = 2}); //max speed 65
+
+//ring under ladder
+   chassis.moveToPoint(-3, 60, 2000); //-6, 55
+   chassis.moveToPoint(18, 35, 2000, {.forwards = false, .minSpeed = 20, .earlyExitRange = 3});
+
+//ring to right of first ring
+   //chassis.turnToHeading(90, 1000);
+   chassis.moveToPoint(53, 43, 2000); //max speed 65
+   pros::delay(1000);
+   lift.setPosition(1);
+   intake.disableAntiStall();
+
+
+   chassis.moveToPoint(40, 40, 1000, {.forwards = false}); //max speed 65
+   chassis.turnToHeading(0, 500);
+
+   //wall stake 2
+   chassis.moveToPoint(37, 65, 2000);
+   chassis.turnToHeading(90, 500);
+   chassis.moveToPoint(60, 65, 2000);
+   //chassis.moveToPose(60, 55.5, 90, 3500);
+   conveyorMotor.move_velocity(0);
+   pros::delay(700);
+   conveyorMotor.move_relative(-50, -600);
+   lift.setPosition(4);
+   pros::delay(500);
+   intake.autoRun();
+   chassis.moveToPoint(44, 65, 2000, {.forwards = false});
+   //chassis.turnToHeading(90, 1000);
+   chassis.turnToHeading(180, 500);
+   lift.setPosition(0);
+   intake.autoRun();
+   intake.enableAntiStall();
+
+   //2 rinfs
+   chassis.moveToPoint(50, -13, 1900, {.maxSpeed = 70, .minSpeed = 20, .earlyExitRange = 4}); //max speed 65
+
+   chassis.moveToPoint(40, 10, 1500, {.forwards = false, .minSpeed = 30, .earlyExitRange = 3});
+   //chassis.turnToHeading(90, 1000);
+
+   //1 ring
+   chassis.moveToPoint(65, 16, 1000, {.minSpeed = 30, .earlyExitRange = 1}); //max speed 65
+
+   chassis.moveToPoint(50, 12, 1500, {.forwards = false, .minSpeed = 20, .earlyExitRange = 4});
+
+//cornering
+   chassis.turnToHeading(315, 500);
+   chassis.moveToPoint(70, -7, 1000, {.forwards = false});
+   pros::delay(500);
+   clamp.toggle();
+   intake.stop();
+   conveyorMotor.move_velocity(-600);
+   pros::delay(300);
+
+//leave corner, prep lady brown for alliance stake
+   //chassis.moveToPoint(40, 6, 1000, {.minSpeed = 70, .earlyExitRange = 4});
+   chassis.moveToPoint(46, 85, 3000);
+   intake.autoRun();
+   pros::delay(2000);
+   lift.setPosition(1);
+   intake.disableAntiStall();
+   
+//pick up second ring
+   chassis.turnToHeading(270, 500);
+   chassis.moveToPoint(19, 85, 1500);
+
+//mogo 3
+   chassis.turnToHeading(180, 500);
+   chassis.moveToPoint(-4, 108, 2000, {.forwards = false});
+   pros::delay(1000);
+   clamp.toggle();
+   //pros::delay(300);
+
+//alliance stake + 1 ring on mogo
+   chassis.turnToHeading(0, 500);
+   chassis.moveToPose(-6, 130, 0, 1500, {.maxSpeed = 80});
+   pros::delay(1000);
+   chassis.setPose(-6, 130, 0);
+   chassis.moveToPose(-6, 127, 0, 2000, {.forwards = false, .maxSpeed = 65});
+   conveyorMotor.move_velocity(0);
+   pros::delay(200);
+   conveyorMotor.move_relative(-50, -600);
+   pros::delay(400);
+   intake.autoRun();
+   lift.setPosition(4);
+   intake.enableAntiStall();
+   pros::delay(400);
+
+   chassis.moveToPoint(-6, 120, 1500, {.forwards = false});
+   chassis.turnToHeading(225, 500);
+   lift.setPosition(0);
+
+//solo ring on mogo
+   chassis.moveToPoint(-28, 93, 2000, {.minSpeed = 20, .earlyExitRange = 4});
+
+//first ring in 3
+   chassis.moveToPoint(-52, 115, 2000);
+   chassis.turnToHeading(270, 500);
+
+//second ring in 3
+   chassis.moveToPoint(-67, 117, 1000);
+   chassis.moveToPoint(-56, 117, 1000, {.forwards = false});
+
+//last ring in 3
+//   chassis.moveToPoint(-53, 130, 2000);
+
+//cornering
+//   chassis.moveToPoint(-52, 120, 1000, {.forwards = false});
+   chassis.moveToPoint(-65, 128, 1500);
+   doinker.toggle();
+   chassis.turnToHeading(220, 500);
+   chassis.turnToHeading(120, 500);
+   pros::delay(600);
+   clamp.toggle();
+   doinker.toggle();
+   chassis.moveToPoint(-70, 130, 1000, {.forwards = false});
+   intake.autoRun(-1);
+
+//last mogo in corner
+
+   //chassis.moveToPoint(0, 110, 2000, {.minSpeed = 70, .earlyExitRange = 4});
+   intake.autoRun();
+   chassis.moveToPoint(20, 130, 2000);
+   chassis.moveToPoint(70, 160, 4000);
+   chassis.moveToPoint(62, 120, 1000, {.forwards = false});
+}
+
+void Autonomous::auton6(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //bluerightawp DONE
    //DONE
    //autonomous 2 --> blueRight AWP (double mogo)
+   //alliance stake, two on each mogo
+   //lines up at 320 degrees on imu, as close as possible to rings in front of alliance stake
+   //180 - theta, inv y
 
-    //line up straight back from mogo
-    //picks up mogo, then scores preload + adjacent ring, then scores both midline rings
-    //then touches ladder with intake
+   //score alliance stake
+   chassis.setPose(0, 0, 180 - 140);
+   lift.setPosition(2);
+   chassis.moveToPoint(3, 6, 5000);
+   lift.setPosition(3);
 
-    //release first stage
-    //intake.autoRun(-1, 600);
-    //pros::delay(150);
-    //intake.stop();
-
-    //set pose
-    chassis.setPose(-8, 58.144, 215);
-
-    //move to mogo, motion chained
-    //chassis.moveToPoint(22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-    chassis.moveToPose(25.946, 32.919, 270, 5000, {.forwards = false, .minSpeed = 30/*.maxSpeed = 63*/});
-    pros::delay(1850);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(500);
-
-    /*
-    //move to single stack adjacent to mogo 
-    chassis.moveToPoint(3.296, -30.919,5000); // x-coord from jerry was 38.596
-    pros::delay(1000);
-    chassis.moveToPoint(4.296, -40.919,5000, {.forwards = false});
-    */
+   //move to goal and clamp
+   chassis.moveToPoint(-14, -30, 5000, {.forwards = false, .maxSpeed = 65});
+   pros::delay(1200);
+   clamp.toggle();
+   intake.autoRun(1, 200, 600);
+   lift.setPosition(0);
    
-    /*
-    slowly move to leftmost stack of rings on midline
-    chassis.moveToPose(-6.296, -18.919, 0, 3000);
+   //pick up ring off of center line
+   //chassis.turnToHeading(330, 1000);
+   chassis.moveToPoint(-28.5, -43.5, 5000, {.maxSpeed = 60});
+   pros::delay(1800);
 
-    back up to prepare for second stack of rings
-    chassis.moveToPoint(0, -30.919, 2000, {.forwards = false});
-    */
+   //back up slightly
+   chassis.moveToPoint(-23, -34, 1000, {.forwards = false});
 
-    //move to first stack
-    chassis.moveToPose(-3.296, 6, 5, 3500, {.minSpeed = 45});
-    intake.autoRun(1, 600);
-    chassis.moveToPose(2.296, 6, 5, 3500, {.minSpeed = 45});
+   //move to close ring stack
+   chassis.moveToPoint(-39.2, -26.5, 5000, {.maxSpeed = 60});
+   pros::delay(400);
+   chassis.moveToPoint(-37, -26.5, 5000, {.forwards = false});
+   pros::delay(1000);
+   
+   //move to alliance stake ring, motion chained
+   chassis.moveToPoint(-4, -8, 5000, {.minSpeed = 55, .earlyExitRange = 4});
+   chassis.moveToPoint(22, -4, 5000, {.maxSpeed = 45});
+   double now = pros::millis();
+   clamp.toggle();
+   //lift.setPosition(2);
+   while (optical.get_hue() < 100 && (pros::millis() - now) < 1800) {
+      intake.autoRun(1, 600, 400); 
+   }
+   conveyorMotor.move_velocity(0);
+   intake.disableAntiStall();
 
-    //back up after scoring
-    chassis.moveToPoint(-8.296, 24.919, 5000, {.forwards = false});
+   //move to mogo
+   chassis.moveToPoint(32, -25, 5000, {.forwards = false, .maxSpeed = 65});
+   conveyorMotor.move_velocity(0);
+   pros::delay(1200);
+   clamp.toggle();
+   intake.enableAntiStall();
+   
+   pros::delay(200);
+   intake.autoRun();
 
-    //move to second stack
-    chassis.moveToPose(6, 6, (5-180), 3500, {.minSpeed = 45});
+   chassis.moveToPoint(54, -26, 5000, {.maxSpeed = 60});
 
-    //back up after scoring
-    chassis.moveToPoint(3.296, 24.919, 5000, {.forwards = false});
-
-    //go to other side mogo
-    chassis.moveToPoint(40.5, 65, 3000, {.minSpeed = 40});
-    intakeMotor.move_velocity(-600);
-    chassis.moveToPoint(60.5, 65, 3000);
-    pros::delay(1800);
-    clamp.toggle();
-    chassis.moveToPoint(58, 35.919, 5000, {.forwards = false, .maxSpeed = 60});
-    conveyorMotor.move_velocity(-600);
-    pros::delay(1500);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(300);
-    intake.autoRun(1, 600, 600);
-    lift.setPosition(2);
-    
-    chassis.moveToPoint(80.5, 38.919, 5000);
-
-    chassis.moveToPoint(50, 15.919, 5000, {.forwards = false});
+   pros::delay(1000);
+   chassis.moveToPoint(-4, -26, 5000);
 }
 
-void Autonomous::auton7(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
-   controller.print(0, 0, "rl, q: %d", quals);
-   //DONE
-   //autonomous 2 --> redLeft AWP (double mogo)
+void Autonomous::auton7(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //redleftawp DONE
+   //autonomous 7 --> red left AWP
+   //alliance stake, two on each mogo
+   //lines up at 320 degrees on imu, as close as possible to rings in front of alliance stake
 
-    //line up straight back from mogo
-    //picks up mogo, then scores preload + adjacent ring, then scores both midline rings
-    //then touches ladder with intake
+   //score alliance stake
+   chassis.setPose(0, 0, 140);
+   lift.setPosition(2);
+   chassis.moveToPoint(3, -6, 5000);
+   lift.setPosition(3);
+   pros::delay(400);
 
-    //release first stage
-    //intake.autoRun(-1, 600);
-    //pros::delay(150);
-    //intake.stop();
-
-    //set pose
-    chassis.setPose(-8, -58.144, 215);
-
-    //move to mogo, motion chained
-    //chassis.moveToPoint(22.946, -45, 5000, {.forwards = false, .minSpeed = 63, .earlyExitRange = 4});
-    chassis.moveToPose(25.946, -32.919, 270, 5000, {.forwards = false, .minSpeed = 30/*.maxSpeed = 63*/});
-    pros::delay(1850);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(500);
-    intake.autoRun(1, 600);
-    
-    //move to single stack adjacent to mogo 
-    chassis.moveToPoint(0.296, -28.919,5000); // x-coord from jerry was 38.596
-    pros::delay(1000);
-    chassis.moveToPoint(4.296, -40.919,5000, {.forwards = false});
+   //move to goal and clamp
+   chassis.moveToPoint(-14, 30, 5000, {.forwards = false, .maxSpeed = 65});
+   pros::delay(1050);
+   clamp.toggle();
+   lift.setPosition(0);
+   intake.autoRun(1, 200, 600);
    
-    /*
-    slowly move to leftmost stack of rings on midline
-    chassis.moveToPose(-6.296, -18.919, 0, 3000);
+   //chassis.turnToHeading(320, 1000);
+   chassis.moveToPoint(-30, 44, 2000, {.maxSpeed = 60}); //-30, 44
+   pros::delay(1200);
 
-    back up to prepare for second stack of rings
-    chassis.moveToPoint(0, -30.919, 2000, {.forwards = false});
-    */
+   //back up slightly
+   chassis.moveToPoint(-22, 34, 1000, {.forwards = false});
 
-    //move to first stack
-    //chassis.moveToPose(-3.296, -6, 5, 3500, {.minSpeed = 45});
-    //chassis.moveToPose(2.296, -6, 5, 3500, {.minSpeed = 45});
+   //move to close ring stack
+   chassis.moveToPoint(-38, 27, 5000);
+   pros::delay(1200);
+   
+   //move to alliance stake ring, motion chained
+   chassis.moveToPoint(-4, 6, 5000, {.minSpeed = 63, .earlyExitRange = 4});
+   chassis.moveToPoint(20, 6, 5000, {.maxSpeed = 45});
+   double now = pros::millis();
+   clamp.toggle();
+   lift.setPosition(2);
+   while (optical.get_hue() > 25 && (pros::millis() - now) < 2000) {
+      intake.autoRun(1, 600, 400); 
+   }
+   intake.disableAntiStall();
+   conveyorMotor.move_velocity(0);
 
-    //back up after scoring
-    //chassis.moveToPoint(-8.296, -24.919, 5000, {.forwards = false});
+   //move to mogo
+   chassis.moveToPoint(30, 24, 5000, {.forwards = false, .maxSpeed = 65});
+   conveyorMotor.move_velocity(0);
+   pros::delay(1230);
+   clamp.toggle();
+   
+   pros::delay(200);
+   intake.enableAntiStall();
+   intake.autoRun();
 
-    //move to second stack
-    chassis.moveToPoint(8, -6, 3500, {.minSpeed = 45});
+   chassis.moveToPoint(54, 27, 5000, {.maxSpeed = 65});
 
-    //back up after scoring
-    chassis.moveToPoint(3.296, -36.919, 5000, {.forwards = false});
-
-    //go to other side mogo
-    chassis.moveToPoint(40.5, -70, 3000, {.maxSpeed = 80});
-    intakeMotor.move_velocity(-600);
-    chassis.moveToPoint(60.5, -65, 3000, {.maxSpeed = 80});
-    clamp.toggle();
-    chassis.moveToPoint(59, -35.919, 5000, {.forwards = false, .maxSpeed = 60});
-    conveyorMotor.move_velocity(-600);
-    pros::delay(1500);
-
-    //clamp mogo
-    clamp.toggle();
-    pros::delay(300);
-    intake.autoRun(1, 600, 600);
-    lift.setPosition(2);
-    
-    chassis.moveToPoint(82.5, -38.919, 5000, {.maxSpeed = 60});
-
-    chassis.moveToPoint(50, -15.919, 5000, {.forwards = false});
+   pros::delay(1200);
+   chassis.moveToPoint(22, 39, 5000, {.forwards = false});
 }
 
+void Autonomous::auton8(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //redelims
+   //autonomous 8 --> red elims rushes
+
+   if (ringRush){
+      //ring rush autonomous RED DONE
+      chassis.setPose(0, 0, 0);
+      chassis.moveToPose(-.5, 29, 0, 4000, {.minSpeed = 80, .earlyExitRange = 2});
+      intakeMotor.move_velocity(600);
+      doinker.toggle();
+      chassis.moveToPose(-13.5, 45, 330, 3000, {.minSpeed = 80});
+      chassis.moveToPose(-21, 44, 270, 1500);
+
+      pros::delay(400);
+      chassis.moveToPoint(11, 30, 2000, {.forwards = false, .maxSpeed = 65});
+      pros::delay(1150);
+      clamp.toggle();
+      pros::delay(300);
+      chassis.turnToHeading(260, 500);
+      pros::delay(500);
+      doinker.toggle();
+      intake.autoRun();
+
+      chassis.turnToHeading(270, 500);
+      chassis.moveToPoint(-22, 30, 2000, {.maxSpeed = 70});
+
+      pros::delay(600);
+      chassis.turnToHeading(135, 500);
+
+      chassis.moveToPoint(9, 0, 2000);
+      chassis.turnToHeading(90, 500);
+      chassis.moveToPose(30, 3, 90, 4000, {.maxSpeed = 65});
+      chassis.moveToPose(50, 3, 90, 4000, {.maxSpeed = 65});
+
+   }
+   else {
+      //goal rush autonomous RED
+      chassis.setPose(24, 0, -15);
+
+      chassis.moveToPoint(11, 33, 1800, {.minSpeed = 90});
+      intakeMotor.move_velocity(200);
+      pros::delay(650);
+      doinker.toggle();
+      chassis.moveToPoint(4, 24, 7000, {.forwards = false});
+      chassis.moveToPoint(4, 28, 1000, {.forwards = false});
+      chassis.turnToHeading(90, 1500, {.maxSpeed = 50});
+      pros::delay(1000);
+      doinker.toggle();
+
+      chassis.moveToPoint(-10, 28, 2000, {.forwards = false, .maxSpeed = 65});
+      pros::delay(750);
+      double now = pros::millis();
+      clamp.toggle();
+      pros::delay(200);
+      while (optical.get_hue() > 25 && (pros::millis() - now) < 2000) {
+         intake.autoRun(1, 600, 400); 
+      }
+      conveyorMotor.move_velocity(0);
+      chassis.moveToPoint(4, 10, 3000, {.forwards = false});
+      pros::delay(400);
+      clamp.toggle();
+      pros::delay(200);
+
+      chassis.moveToPoint(0, 27, 2000);
+
+      chassis.moveToPose(20, 26, 270, 3000, {.forwards = false});
+
+      pros::delay(2000);
+      clamp.toggle();
+      pros::delay(300);
+      intake.autoRun();
+
+      chassis.moveToPoint(7, 35, 2000, {.maxSpeed = 40});
+   }
+
+}
+
+void Autonomous::auton9(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){ //blueelims DONE
+   //autonomous 9 --> blue elims rushes
+   if (ringRush){
+      //ring rush autonomous BLUE
+      chassis.setPose(0, 0, 180-0);
+
+      chassis.moveToPose(-.5, -29, 180, 4000, {.minSpeed = 80, .earlyExitRange = 2});
+      doinker.toggle();
+      intakeMotor.move_velocity(600);
+      chassis.moveToPose(-4, -48, 165, 4000, {.minSpeed = 80});
+      pros::delay(1000);
+//170
+      //chassis.turnToHeading(180-50, 500);
+//-90 = 270
+      chassis.moveToPose(10, -30.5, 180-270, 2000, {.forwards = false});
+      pros::delay(1600);
+      clamp.toggle();
+      pros::delay(300);
+      intake.autoRun();
+      doinker.toggle();
+      chassis.moveToPoint(-6, -29, 2000);
+
+      chassis.moveToPoint(-9, -10, 2000);
+      chassis.moveToPoint(11, -2, 2000);
+
+      chassis.moveToPose(35, -2, 180-90, 4000, {.maxSpeed = 65});
+      chassis.moveToPose(55, -2, 180-90, 4000, {.maxSpeed = 65});
+
+
+   }
+   else {
+      chassis.setPose(0, 0, 180-15);
+
+      chassis.moveToPoint(11, -35, 2000, {.minSpeed = 90});
+      intakeMotor.move_velocity(200);
+      pros::delay(650);
+      doinker.toggle();
+      chassis.moveToPoint(11, -27, 7000, {.forwards = false});
+      chassis.turnToHeading(90, 1000);
+      pros::delay(1000);
+      doinker.toggle();
+
+      chassis.moveToPoint(-6, -27, 2000, {.forwards = false, .maxSpeed = 65});
+      pros::delay(750);
+      double now = pros::millis();
+      clamp.toggle();
+      pros::delay(200);
+      while (optical.get_hue() < 100 && (pros::millis() - now) < 2000) {
+         intake.autoRun(1, 600, 400); 
+      }
+      conveyorMotor.move_velocity(0);
+      chassis.moveToPoint(4, -10, 3000, {.forwards = false});
+      pros::delay(400);
+      clamp.toggle();
+      pros::delay(200);
+
+      chassis.moveToPoint(0, -27, 2000);
+
+      chassis.moveToPose(20, -35, 270, 3000, {.forwards = false});
+
+      pros::delay(2000);
+      clamp.toggle();
+      pros::delay(300);
+      intake.autoRun();
+
+      chassis.moveToPoint(7, -35, 2000, {.maxSpeed = 40});
+   }
+
+}
 
 void Autonomous::autonMove(Intake &intake, Clamp &clamp, Doinker &doinker, Lift &lift){
     switch (Autonomous::auton) {
    case blueRight:
       auton1(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("blue");
       break;
    case redLeft:
       auton2(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("red");
       break;
    case redRight:
       auton3(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("red");
       break;
    case blueLeft:
       auton4(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("blue");
       break;
    case blueRightAWP:
       auton6(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("blue");
       break;
    case redLeftAWP:
       auton7(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("red");
+      break;
+   case redElims:
+      auton8(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("red");
+      break;
+   case blueElims:
+      auton9(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("blue");
       break;
    case skills:
       auton5(intake, clamp, doinker, lift);
+      Autonomous::allianceColor = std::string("red");
       break;
    }
 }
@@ -632,6 +854,14 @@ void Autonomous::autonSwitcher(int autonNum){
 		Autonomous::autonName = "Red Left AWP";
 		Autonomous::auton	  = redLeftAWP;
       Autonomous::allianceColor = std::string("red");
+      break;
+   
+   case 4:
+		Autonomous::autonName = "Red Elims";
+		Autonomous::auton	  = redElims;
+      Autonomous::allianceColor = std::string("red");
+      break;
+   
 	case -1:
 		Autonomous::autonName = "Blue Left";
 		Autonomous::auton	  = blueLeft;
@@ -647,6 +877,13 @@ void Autonomous::autonSwitcher(int autonNum){
 		Autonomous::auton	  = blueRightAWP;
       Autonomous::allianceColor = std::string("blue");
 		break;
+   
+   case -4:
+		Autonomous::autonName = "Blue Elims";
+		Autonomous::auton	  = blueElims;
+      Autonomous::allianceColor = std::string("blue");
+		break;
+   
    case 0:
       Autonomous::autonName = "Skills";
       Autonomous::auton    = skills;

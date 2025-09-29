@@ -18,25 +18,25 @@ Lift::Lift() {
 }
 
 std::vector<double> positions = {
-    5,    // Empty
-    25,   // Loading
-    80,   //up, not score (rest)
-    150  // bring to wall stake 150
-
+    10,    // Empty
+    37,   // Loading
+    80,//up, not score (rest)
+    175,  // bring to wall stake (+ some)
+    200,     //alliance stake
+    235     //goal tip
 };
 
 //positions are based on ROTATION SENSOR readings (degrees), NOT motor
 
 size_t liftIndex(0);
 
-lemlib::PID liftPID(2, 0, 0);
+lemlib::PID liftPID(2, 0, 1.5);
 
 void Lift::init() {
     liftMotor.set_brake_mode(pros::MotorBrake::hold);
     liftMotor.set_encoder_units(pros::MotorUnits::degrees);
     pros::delay(500);
     liftMotor.tare_position();
-    //srotation.reset_position();
 }
 
 
@@ -47,12 +47,14 @@ void Lift::run() {
             liftIndex = liftIndex + 1;
         }
         liftIndex = std::min(liftIndex, size_t(positions.size() - 1)); //keep w/in bounds
+        conveyorMotor.move_velocity(-600);
+        pros::delay(100);
+        conveyorMotor.move_velocity(0);
         liftMotor.move_absolute(positions[liftIndex], 200); //move arm
-
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
         liftIndex = liftIndex - 1; //decrease index by 1
-        if (liftIndex == 2){
+        if (liftIndex == 2 || liftIndex == 4){
             liftIndex = liftIndex - 1;
         }
         liftIndex = std::max(liftIndex, size_t(0)); //keep w/in bounds
@@ -62,6 +64,9 @@ void Lift::run() {
         setPosition(2);
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+        setPosition(5);
+    }
+    else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
         setPosition(0);
     }
     /*

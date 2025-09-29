@@ -14,16 +14,31 @@ Intake::Intake() {
 }
 
 bool autoSortEnabled(1);
-bool antiStallEnabled(0);
+bool antiStallEnabled(1);
+bool detectedRing(0);
 
-void enableAutoSort()
+void Intake::enableAutoSort()
 {
           // Enable auto sort
+          autoSortEnabled = true;
 }
 
-void disableAutoSort()
+void Intake::disableAutoSort()
 {
          // Disable auto sort
+         autoSortEnabled = false;
+}
+
+void Intake::enableAntiStall()
+{
+          // Enable auto sort
+          antiStallEnabled = true;
+}
+
+void Intake::disableAntiStall()
+{
+         // Disable auto sort
+         antiStallEnabled = false;
 }
 
 void Intake::run() {
@@ -39,12 +54,12 @@ void Intake::run() {
     }
     else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
         if (autoSortEnabled){
-            optical.set_led_pwm(0);
             autoSortEnabled = false;
+            optical.set_led_pwm(0);
         }
         else {
-            optical.set_led_pwm(60);  // turn on light for color sort (on by default)
-            autoSortEnabled = true;  
+            autoSortEnabled = true;
+            optical.set_led_pwm(100);  
         }
     }
     else{
@@ -68,30 +83,36 @@ void Intake::stop(){
 
 void sort()
 {
-controller.print(1, 1, "ring detected!");
-pros::delay(150);
+
+if (distance.get() < 25){
+pros::delay(20);
 conveyorMotor.move_velocity((0));
-pros::delay(150);
-conveyorMotor.move_velocity((-600));
-//pros::delay(150);
-//conveyorMotor.move_velocity((0));
+pros::delay(70);
+conveyorMotor.move_velocity((600));
 }
 
-void antiStall(int goal)
+
+}
+
+void antiStall()
 {
-controller.print(1, 1, "stall!");
-conveyorMotor.move_velocity(goal * -1);
-pros::delay(1000);
+//controller.print(1, 1, "stall!");
+conveyorMotor.move_velocity(-600);
+pros::delay(200);
+conveyorMotor.move_velocity(600);
+//intakeMotor.move_velocity(600);
 }
 
 pros::Task colorSortingTask(
     [](){
-        double redUpper = 30;
+        double redUpper = 28;
         double blueLower = 100;
         while (true) {
-            if (autoSortEnabled){
+            if ((autoSortEnabled)){
         
         std::string allianceColor = Robot::Autonomous::allianceColor;
+
+
         	if (((allianceColor == std::string("red") && blueLower < optical.get_hue())) || //check if the object close is blue (if we're red) or red (if we're blue)
             	((allianceColor == std::string("blue") && redUpper > optical.get_hue()))){
                 //if the object is of the opposite color, trigger the conveyor to stop
@@ -100,7 +121,8 @@ pros::Task colorSortingTask(
                 //while ((pros::millis() - startTime) < 300){
                 sort();
                 }
-        }          
+        }
+        //controller.print(1, 1, "%f", optical.get_hue());       
 		pros::delay(20); //save resources
         }
     }
@@ -108,21 +130,26 @@ pros::Task colorSortingTask(
 
 pros::Task antiStallTask(
     [](){
-        
+        double timer1 = 0;
         while (true) {
             if (antiStallEnabled){ //only run code if anti stall is enabled
-                double goal = conveyorMotor.get_target_velocity();
-                double actual = conveyorMotor.get_actual_velocity();
-        	if ((actual > -100 && goal == -600) || //check if the actual velocity of the conveyor is close to 0, only if conveyor should be running
-            	(actual < 100 && goal == 600)) {
-                controller.print(1, 1, "stall!");
-                conveyorMotor.move_velocity(goal * -1);
-                pros::delay(1000);
-                }
+                double convGoal = conveyorMotor.get_target_velocity();
+                double intakeGoal = intakeMotor.get_target_velocity();
+                double draw = conveyorMotor.get_current_draw();
+                
+        	if (draw > 2450) {
+                    if (timer1 > 40){
+                        antiStall();
+                        timer1 = 0;
+                    }
+                    else {
+                        timer1 += 20;
+                    }
+                    }
             else {
-                controller.clear_line(1);
+                timer1 = 0;
             }
-        }          
+        }
 		pros::delay(20); //save resources
         }
     }

@@ -1,5 +1,6 @@
 #include "globals.h"
 #include "lemlib/chassis/chassis.hpp"
+#include "lemlib/chassis/trackingWheel.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/adi.hpp"
 #include "pros/distance.hpp"
@@ -13,32 +14,44 @@ namespace Global{
 
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-    //intake and conveyor motors
-    pros::Motor intakeMotor(-2, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg); //5.5W motor configured as green cartridge
-    pros::Motor conveyorMotor(20, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
-    pros::Motor liftMotor(-13, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg); //5.5W motor configured as green cartridge
+    //drive motor groups
+    pros::MotorGroup driveRight({14,15,16}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
+    pros::MotorGroup driveLeft({-13,-19,-20}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
 
-    //pneumatics
-    pros::adi::Pneumatics clampControl('H', false);
-    pros::adi::Pneumatics doinker('G', false);
+    //intake and conveyor motors
+
+    pros::Motor intakeMotor(12, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
+    pros::Motor conveyorMotor(-9, pros::v5::MotorGears::blue, pros::v5::MotorUnits::deg);
+    pros::Motor liftMotor(-6, pros::v5::MotorGears::green, pros::v5::MotorUnits::deg);
+
+    //sensors
+    pros::Optical optical(8);
+    pros::Distance distance(10);
+    //pros::adi::Potentiometer pot('D');
+    pros::Rotation rotation(7);
 
     //imu
-    pros::Imu imu(14);
+    pros::Imu imu(11);
 
-    //drive motor groups
-    pros::MotorGroup driveRight({1,6,7}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
-    pros::MotorGroup driveLeft({-3,-4,-5}, pros::MotorGearset::blue, pros::v5::MotorUnits::degrees);
+    //odom sensors
+    pros::Rotation horSensor(-1);
+    pros::Rotation verSensor(-2);
+
+    //tracking wheels -.5, -3.33
+    lemlib::TrackingWheel hor(&horSensor, lemlib::Omniwheel::NEW_275, -4);
+    lemlib::TrackingWheel ver(&verSensor, lemlib::Omniwheel::NEW_275, -.5);
 
     //make drivetrain
     lemlib::Drivetrain drivetrain(&driveLeft, &driveRight, 
 	12, lemlib::Omniwheel::NEW_325, 450, 2);
 
-    //odom (only IMU!)
-    lemlib::OdomSensors sensors(nullptr, nullptr, 
-	nullptr, nullptr, &imu);
+    //odom (imu, 1x horizontal, 1x vertical)
+    lemlib::OdomSensors sensors(&ver, nullptr, 
+	&hor, nullptr, &imu);
 
     //PID config
     // lateral PID controller
+    /*
     lemlib::ControllerSettings lateralController(10, // proportional gain (kP)
                                                 0, // integral gain (kI)
                                                 3, // derivative gain (kD)
@@ -48,12 +61,23 @@ namespace Global{
                                                 3, // large error range, in inches
                                                 500, // large error range timeout, in milliseconds
                                                 20 // maximum acceleration (slew)
-    );
+    );*/
+
+    lemlib::ControllerSettings lateralController(9, // proportional gain (kP)
+                                              0, // integral gain (kI)
+                                              6.5, // derivative gain (kD)
+                                              3, // anti windup
+                                              1, // small error range, in inches
+                                              100, // small error range timeout, in milliseconds
+                                              3, // large error range, in inches
+                                              500, // large error range timeout, in milliseconds
+                                              20 // maximum acceleration (slew)
+);
 
     // angular PID controller
-    lemlib::ControllerSettings angularController(2, // proportional gain (kP)
+    lemlib::ControllerSettings angularController(5.5, // proportional gain (kP) 5
                                                 0, // integral gain (kI)
-                                                10, // derivative gain (kD)
+                                                50, // derivative gain (kD)
                                                 3, // anti windup
                                                 1, // small error range, in degrees
                                                 100, // small error range timeout, in milliseconds
@@ -64,11 +88,9 @@ namespace Global{
 
     lemlib::Chassis chassis(drivetrain, lateralController, angularController, sensors);
 
-
-    //sensors
-    pros::Optical optical(12);
-    //pros::Distance distance(18);
-    //pros::adi::Potentiometer pot('D');
-    pros::Rotation rotation(17);
+    
+    //pneumatics
+    pros::adi::Pneumatics clampControl('H', false);
+    pros::adi::Pneumatics doinker('G', false);
 }
 }

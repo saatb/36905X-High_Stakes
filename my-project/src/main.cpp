@@ -65,16 +65,20 @@ void initialize() {
 
 	subsystem.lift.init();//init lift
 	//config optical sensor
-	optical.set_led_pwm(100);
 	optical.set_integration_time(40);
-
-	
-	/*pros::Task screen_task([&](){
+	optical.set_led_pwm(100);
+/*
+	pros::lcd::initialize();
+	pros::Task screen_task([&](){
+  
 		while (true){
 			pros::lcd::print(0, "X: %f", chassis.getPose().x);
 			pros::lcd::print(1, "Y: %f", chassis.getPose().y);
 			pros::lcd::print(2, "Theta: %f", chassis.getPose().theta);
-			pros::delay(20);
+			pros::lcd::print(3, "Conveyor: %d", conveyorMotor.get_current_draw());
+			pros::lcd::print(4, "Color: %f", optical.get_hue());
+			pros::lcd::print(5, "Distance: %d", distance.get());
+			pros::delay(40);
 		}
 	});*/
 }
@@ -85,9 +89,6 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	/*lv_obj_t *img = lv_img_create(lv_scr_act());
-	lv_img_set_src(img, &test2);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
 	screen.selector.selector();
 }
 
@@ -116,13 +117,18 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	/*lv_obj_t *img = lv_img_create(lv_scr_act());
-	lv_img_set_src(img, &test1);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
 	subsystem.autonomous.autonMove(subsystem.intake, subsystem.clamp, subsystem.doinker, subsystem.lift);
 }
 
-
+void skillsMacro(){
+   subsystem.lift.setPosition(1);
+   subsystem.intake.disableAntiStall();
+   subsystem.intake.autoRun();
+   pros::delay(500);
+   subsystem.intake.stop();
+   subsystem.lift.setPosition(4);
+   pros::delay(1000);
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -140,9 +146,6 @@ void autonomous() {
 
 
 void opcontrol() {
-	/*lv_obj_t *img = lv_img_create(lv_scr_act());
-	lv_img_set_src(img, &test3);
-	lv_obj_align(img, LV_ALIGN_CENTER, 0, 0);*/
 	while (true){
 		subsystem.drivetrain.run();
 		subsystem.intake.run();
